@@ -15,8 +15,7 @@ import android.widget.TextView;
 
 
 public class AirBand extends Activity implements SensorEventListener {
-    private float IDLETHRESH = 2;
-    private float STRUMTHRESH = 20;
+    private float STRUMTHRESH = 10;
 
     private SensorManager senSensorManager;
     private Sensor senAccelerometer;
@@ -82,13 +81,13 @@ public class AirBand extends Activity implements SensorEventListener {
 
 
             // Don't strum unless we return to normal
-            if(nx + ny < (11f  + IDLETHRESH) &&  nx + ny > (11f - IDLETHRESH))
+            if(nx + ny <= 11f)
             {
                 canStrum = true;
             }
 
 
-            if(canStrum && (nx + ny > (11f  + STRUMTHRESH) || nx + ny < (11f - STRUMTHRESH)))
+            if(canStrum && (nx + ny > (11f  + STRUMTHRESH)))
             {
                 canStrum = false;
                 new SendStrumGram().execute(this);
