@@ -25,6 +25,9 @@ public class AirBand {
 	public static final byte BRASS_BYTE = 5;
 	public static final byte FLUTE_BYTE = 6;
 	
+	public static int pianoInversionCounter = 0;
+	public static boolean pianoInversionUp = true;
+	
 	private DatagramPacket packet;
 	private byte buf[];
 	
@@ -62,6 +65,18 @@ public class AirBand {
 		System.out.println("openCV started.");	
 		String line;
 		
+		int redY = 0;
+		//int greenY = 0;
+		int blueY = 0;
+		
+		int redYMax = 0;
+		//int greenYMax = 0;
+		int blueYMax = 0;
+		
+		int redYMin = 1000;
+		//int greenYMin = 1000;
+		int blueYMin = 1000;
+		
 		while(true)
 		{
 			try{
@@ -72,8 +87,17 @@ public class AirBand {
 				return;
 			}
 			
-			if(line != null)
-				System.out.println("OpenCv says:" + line);
+			if(line != null && !line.equals("noise"))
+			{
+				//System.out.println("OpenCv says:" + line);
+				String[] parts = line.split(" ");
+				//greenY = Integer.parseInt(parts[0]);
+				blueY = Integer.parseInt(parts[3]);
+				//System.out.println(blueY);
+				//redY= Integer.parseInt(parts[5]);
+			}
+			
+			
 		
 			byte in = air.recieveStrums();
 			if(in == ERROR_BYTE)
@@ -83,7 +107,12 @@ public class AirBand {
 			}
 			if(in == BASS_BYTE)
 			{
-				mid.noteQueue(MidiRoutines.Instrument.BASS, 36 + c.getBass()); 
+				if(blueY != 0)
+				{
+					int note =  (int)(((double)(blueY) / 500.0) * 8.0);
+					//System.out.println(" NOTE: " + note);
+					mid.noteQueue(MidiRoutines.Instrument.BASS, 36 + c.getBass() + c.getFigure().get(note % c.getFigure().size()) + ((note/c.getFigure().size())*12)); 
+				}
 			}
 			if(in == GUITAR_BYTE)
 			{
@@ -96,9 +125,35 @@ public class AirBand {
 			{
 				mid.noteQueue(MidiRoutines.Instrument.LEAD, 60 + c.getBass() + c.getFigure().get((int)(Math.random()*c.getFigure().size()))); 
 			}
+			
+			//Invert upwards twice.
 			if(in == PIANO_BYTE)
 			{
-				mid.noteQueue(MidiRoutines.Instrument.PIANO, 60 + c.getBass() + c.getFigure().get((int)(Math.random()*c.getFigure().size()))); 
+				//Piano inversion works way up. 2->2->hold
+				int note = 0;
+				
+				for(Integer interval : c.getFigure())
+				{
+					if(note < (pianoInversionCounter))
+					{
+						mid.noteQueue(MidiRoutines.Instrument.PIANO, 48 + c.getBass() + interval + 12);
+					} else
+					{
+						mid.noteQueue(MidiRoutines.Instrument.PIANO, 48 + c.getBass() + interval);
+					}
+					note++;
+				}
+				if(pianoInversionUp)
+				{
+					pianoInversionCounter += 1;
+					if(pianoInversionCounter == c.getFigure().size())
+						pianoInversionUp = false;
+				} else
+				{
+					pianoInversionCounter -= 1;
+					if(pianoInversionCounter == 0)
+						pianoInversionUp = true;
+				}
 			}
 			if(in == SYNTH_BYTE)
 			{
@@ -106,10 +161,12 @@ public class AirBand {
 			}
 			if(in == BRASS_BYTE)
 			{
-				mid.noteQueue(MidiRoutines.Instrument.TRUMPET, 60 + c.getBass() + c.getFigure().get((int)(Math.random()*c.getFigure().size()))); 
+				//Mic-based
+				mid.noteQueue(MidiRoutines.Instrument.TRUMPET, 60 + c.getBass() + c.getFigure().get((int)(Math.random()*3))); 
 			}
 			if(in == FLUTE_BYTE)
 			{
+				//Mic-based
 				mid.noteQueue(MidiRoutines.Instrument.FLUTE, 60 + c.getBass() + c.getFigure().get((int)(Math.random()*c.getFigure().size()))); 
 			}
 
