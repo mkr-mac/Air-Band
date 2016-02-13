@@ -7,7 +7,7 @@ import java.awt.List;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
-//import com.jgoodies.forms.factories.DefaultComponentFactory;
+import com.jgoodies.forms.factories.DefaultComponentFactory;
 import java.awt.Font;
 import javax.swing.JCheckBox;
 import javax.swing.SwingConstants;
@@ -63,7 +63,7 @@ public class Package {
 		textField.setBounds(50, 578, 114, 50);
 		frame.getContentPane().add(textField);
 		textField.setColumns(2);
-		/**
+		
 		JLabel lblBpm = DefaultComponentFactory.getInstance().createLabel("BPM");
 		lblBpm.setFont(new Font("Tahoma", Font.BOLD, 40));
 		lblBpm.setBounds(50, 495, 104, 87);
@@ -103,7 +103,6 @@ public class Package {
 		lblStyle.setFont(new Font("Tahoma", Font.BOLD, 40));
 		lblStyle.setBounds(386, 509, 148, 50);
 		frame.getContentPane().add(lblStyle);
-<<<<<<< HEAD
 		
 		JButton btnReady = new JButton("Ready!");
 		btnReady.addActionListener(new ActionListener() {
@@ -126,10 +125,6 @@ public class Package {
 		JCheckBox checkBox_1 = new JCheckBox("");
 		checkBox_1.setBounds(235, 385, 49, 50);
 		frame.getContentPane().add(checkBox_1);
-		
-=======
-		*/
->>>>>>> 5660ea3dac21f0df1f36985a457249db6a22cf47
 		
 	}
 
