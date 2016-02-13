@@ -1,7 +1,6 @@
 
 import javax.sound.midi.Instrument;
 import javax.sound.midi.MidiSystem;
-import javax.sound.midi.Soundbank;
 import javax.sound.midi.Synthesizer;
 import javax.sound.midi.MidiChannel;
 
@@ -11,30 +10,30 @@ public class MidiRoutines {
 	private int rhythmInstrument = 27;
 	private int leadInstrument = 30;
 	
-	private int bassChannel = 12;
-	public int rhythmChannel = 2;
-	public int leadChannel = 3;
-	public int percussionChannel = 9;
+	private int bassChannel = 1;
+	private int rhythmChannel = 2;
+	private int leadChannel = 3;
+	private int percussionChannel = 9;
 
-	int volume = 127; // between 0 and 127
+	private int volume = 127; // between 0 and 127
 	//song tempo
-	double tempo = 100; 
-	long oldTime = System.nanoTime();
-	long newTime = System.nanoTime();
-	long delta = 0;
+	private double tempo = 100; 
+	private long oldTime = System.nanoTime();
+	private long newTime = System.nanoTime();
+	private long delta = 0;
 	
 	//for nicer calculations
-	double tempoMod = tempo/120000000;
+	private double tempoMod = tempo/120000000;
 	
-	int beats = 0;
-	double oldBeats = 3;
+	private int beats = 0;
+	private double oldBeats = 3;
 
 	private Synthesizer n;
 	private MidiChannel[] c;
 	private Instrument[] instr;
 	
-	int[] queue = new int[100];
-	int queueCount = 0;
+	private int[] queue = new int[100];
+	private int queueCount = 0;
 	
 	public MidiRoutines(){
 		try{
@@ -46,6 +45,10 @@ public class MidiRoutines {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
+
+		c[bassChannel].programChange(bassInstrument);
+		c[rhythmChannel].programChange(rhythmInstrument);
+		c[leadChannel].programChange(leadInstrument);
 	}
 	
 	public static void main(String args[]){
@@ -71,23 +74,20 @@ public class MidiRoutines {
 			break;
 		
 		case 0:
-			c[bassChannel].programChange(bassInstrument);
 			c[bassChannel].noteOn(noteValue, volume);
 			break;
 		
 		case 1:
-			c[rhythmChannel].programChange(rhythmInstrument);
 			c[rhythmChannel].noteOn(noteValue, volume);
 			break;
 		
 		case 2:
-			c[leadChannel].programChange(leadInstrument);
 			c[leadChannel].noteOn(noteValue, volume);
 			break;
 		}
 	}
 	
-	public void stop(int id){
+	private void stop(int id){
 		c[9].noteOff(id, volume);
 	}
 	
@@ -114,7 +114,7 @@ public class MidiRoutines {
 			oldTime = newTime;
 	}
 	
-	public void drums(){
+	private void drums(){
 
 		switch (beats){
 		
