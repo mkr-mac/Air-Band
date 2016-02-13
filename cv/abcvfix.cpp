@@ -113,7 +113,7 @@ int main()
 			cout << "noise" << endl;
 		}
 		//imshow("demo",frame+frameln);
-		//imshow("threshold",frameth+frameth2+frameth3);
+		imshow("threshold", frameth2);//+frameth2+frameth3);
 		fprintf(stdout,"%d %d %d %d %d %d\n",x1,y1,x,y,x2,y2);
 		fflush(stdout);
 		if (waitKey(1)!=-1) break;
