@@ -169,4 +169,10 @@ public class ChordMap
 		int newroot = candidate.remove(0);
 		return isDominant(pattern)? resolveDominant(root): new Chord((key+newroot)%12,candidate);		
 	}
+	
+	public static Chord fetchExact(int key, int root, int n)
+	{
+		ArrayList<Integer> tmp = new ArrayList<Integer>(map.get((key+root)%12).get(n));
+		return new Chord(tmp.remove(0),tmp);
+	}
 }
