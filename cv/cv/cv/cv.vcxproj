@@ -69,8 +69,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>D:\Programming\OpenCV\Build\install\include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\Programming\OpenCV\Build\install\x86\vc14\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:\Programming\OpenCV\opencv\Build\install\include;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\Programming\OpenCV\opencv\Build\install\x86\vc14\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>D:\Programming\OpenCV\opencv\build\include;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\Programming\OpenCV\opencv\build\x64\vc14\lib;D:\Programming\OpenCV\opencv\build\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -90,6 +94,9 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
+    <Link>
+      <AdditionalDependencies>opencv_world310.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>

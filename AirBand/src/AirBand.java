@@ -46,7 +46,7 @@ public class AirBand {
 			{
 				for(Integer interval : c.getFigure())
 				{
-					mid.noteQueue(in, 60 + interval); 
+					mid.noteQueue(in, 60 + c.getBass()+ interval); 
 					System.out.println(interval);
 				}
 				c = Chord.updateChord(0,false,c);

@@ -38,7 +38,7 @@ public class ChordMap
 	public static Chord getChord(int key, int root, ArrayList<Integer> pattern)
 	{
 		System.out.println(key + " " + root + " ");
-		ArrayList<Integer> candidate = map.get(root).get((int)(Math.random()*map.get(root).size()));
+		ArrayList<Integer> candidate = new ArrayList<Integer>(map.get(root).get((int)(Math.random()*map.get(root).size())));
 		int newroot = candidate.remove(0);
 		return isDominant(pattern)? resolveDominant(root): new Chord((key+newroot)%12,candidate);		
 	}
