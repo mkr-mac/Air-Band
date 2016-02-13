@@ -26,25 +26,40 @@ public class SendStrumGram extends AsyncTask<AirBand,Void,Boolean> {
     private static final String ip = "172.19.37.183";
     private static int strumCount = 0;
     private static AirBand airband;
+    private static boolean sending = false;
+    private static DatagramSocket socket;
+    private static byte[] buf;
+    private static InetAddress address;
+    private static DatagramPacket packet;
 
     @Override
     protected Boolean doInBackground(AirBand... params) {
-        airband = params[0];
+        if (sending)
+            return true;
+        sending = true;
+
+        // get a datagram socket
+        if (socket == null) {
+            try {
+                socket = new DatagramSocket();
+                buf = new byte[3];
+                buf[0] = 4;
+                buf[1] = 20;
+                address = InetAddress.getByName(ip);
+                airband = params[0];
+                packet = new DatagramPacket(buf, buf.length, address, PORT);
+            } catch (Exception e) {
+                return false;
+            }
+        }
         try
         {
-            // get a datagram socket
-            DatagramSocket socket = new DatagramSocket();
-            // send request
-            byte[] buf = new byte[3];
-            buf[0] = 4;
-            buf[1] = 20;
             buf[2] = airband.getID();
-            InetAddress address = InetAddress.getByName(ip);
-            DatagramPacket packet = new DatagramPacket(buf, buf.length, address, PORT);
             socket.send(packet);
-            socket.close();
+            sending = false;
         } catch (Exception e) {
             Log.v("Error!",e.getMessage());
+            socket.close();
             return false;
         }
         return true;

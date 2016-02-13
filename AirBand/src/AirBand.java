@@ -1,51 +1,98 @@
 
-import java.io.*;
 import java.net.*;
 
-public class AirBand {
-	public final int PORT = 45320; 
+import javax.sound.midi.MidiChannel;
+import javax.sound.midi.MidiSystem;
+import javax.sound.midi.MidiUnavailableException;
+import javax.sound.midi.Synthesizer;
 
+public class AirBand {
+	
+	public static final int PORT = 45320; 
+	public DatagramSocket socket = null;
+	
+	// This is returned from the socket if something bad happened and it crashed.
+	public static final byte ERROR_BYTE = -1;
+	// This is returned if there was no note.
+	public static final byte NO_NOTE = -2;
+	private DatagramPacket packet;
+	private byte buf[];
+	
 	public static void main (String args[])
 	{
+		
 		AirBand air = new AirBand();
-		System.out.println("Airband Starting!");
+		if(!air.initSocket())
+			return;
+		
+		System.out.println("Socket set up.");
+		
+		MidiRoutines mid = new MidiRoutines();
+		System.out.println("MIDI Initalized.");
+		
+		int[] notes = {60,62,64,67,69};
 		while(true)
 		{
-			if(air.recieveStrums())
+			byte in = air.recieveStrums();
+			if(in == ERROR_BYTE)
 			{
-				System.out.print("Strum!");
-			} else
+				System.out.println("Socket Crashed");
+				return;
+			} else if(in != NO_NOTE)
 			{
-				System.out.println("Error!");
+				mid.noteQueue(in, notes[(int)(Math.random()*5)]);
 			}
-			
+				mid.update();
 		}
-		
 	}
 	
-	public boolean recieveStrums()
+	private boolean initSocket()
 	{
 		try
 		{
-			DatagramSocket socket = null;
 			socket = new DatagramSocket(PORT);
-			byte[] buf = new byte[3];
-			DatagramPacket packet = new DatagramPacket(buf, buf.length);
-			socket.receive(packet);
-			if(buf[0] == 4 && buf[1] == 20)
-			{
-				socket.close();
-				return true;
-			}
-               
-			socket.close();
-			return false;
+			socket.setSoTimeout(10);
+			buf = new byte[3];
+			packet = new DatagramPacket(buf, buf.length);
 		} catch (Exception e)
 		{
-			e.printStackTrace();
-			//get rekt
+			System.out.println("Could not open socket");
 			return false;
 		}
+		return true;
+	}
+	
+	private byte recieveStrums()
+	{
+		try
+		{
+			
+			socket.receive(packet);
+
+			// Handshake to prevent random traffic.
+			if(buf[0] == 4 && buf[1] == 20)
+			{
+				return buf[2];
+			}
+			System.out.println("Bad Traffic!");
+			return NO_NOTE;
+		
+		} catch (SocketTimeoutException e)
+		{
+			return NO_NOTE;
+		}
+		catch (Exception e)
+		{
+			System.out.println("Undefined socket error!");
+		}
+		try
+		{
+			socket.close();
+		} catch( Exception e)
+		{
+			System.out.println("Could not close socket!");
+		}	
+		return ERROR_BYTE;
     }
  
 }

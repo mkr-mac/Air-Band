@@ -6,23 +6,32 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.ViewFlipper;
 
 
-public class AirBand extends Activity implements SensorEventListener {
+public class AirBand extends Activity implements SensorEventListener{
     private float STRUMTHRESH = 10;
 
     private SensorManager senSensorManager;
     private Sensor senAccelerometer;
-    private byte id = 1;
     private boolean canStrum;
     TextView x,y,z;
+    Button  bass,gtr,lead;
     TextView counter;
+    private byte instrument;
+     ViewFlipper vf;
+
 
 
     @Override
@@ -30,6 +39,7 @@ public class AirBand extends Activity implements SensorEventListener {
     {
 
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +52,43 @@ public class AirBand extends Activity implements SensorEventListener {
         y = (TextView)findViewById(R.id.textView2);
         z = (TextView)findViewById(R.id.textView3);
         counter = (TextView)findViewById(R.id.count);
+        vf = (ViewFlipper) findViewById( R.id.viewFlipper );
         canStrum = true;
+        bass = (Button)findViewById(R.id.bassButton);
+        gtr = (Button)findViewById(R.id.gtrButton);
+        lead = (Button)findViewById(R.id.leadButton);
+        bass.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                instrument = 0;
+                vf.showNext();
+            }
+        });
+
+        gtr.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                instrument = 1;
+                vf.showNext();
+            }
+        });
+        lead.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                instrument = 2;
+                vf.showNext();
+            }
+        });
+
+        (findViewById(R.id.strumView)).setOnTouchListener(new View.OnTouchListener()
+        {
+            @Override
+            public boolean onTouch(View v, MotionEvent event)
+            {
+                if(event.getAction() == event.ACTION_DOWN) {
+                    new SendStrumGram().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (AirBand.this));
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     @Override
@@ -87,17 +133,21 @@ public class AirBand extends Activity implements SensorEventListener {
             }
 
 
+
+
             if(canStrum && (nx + ny > (11f  + STRUMTHRESH)))
             {
                 canStrum = false;
-                new SendStrumGram().execute(this);
+                new SendStrumGram().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (this));
             }
         }
     }
 
+
+
     public byte getID()
     {
-        return id;
+        return instrument;
     }
 
 }
