@@ -46,7 +46,6 @@ public class MidiRoutines {
 			e.printStackTrace();
 		}
 	}
-	/*
 	public static void main(String args[]){
 		MidiRoutines m = new MidiRoutines();
 
@@ -54,7 +53,6 @@ public class MidiRoutines {
 			m.update();
 		}
 	}
-	*/
 	public void noteQueue(int id, int noteValue){
 		queue[queueCount] = id;
 		queueCount++;
@@ -98,7 +96,7 @@ public class MidiRoutines {
 				delta -= 1000/tempoMod;
 			}
 			oldBeats = beats;
-			beats = (int) Math.floor(delta/(125/(2*tempoMod)));
+			beats = (int) Math.floor(delta/(125/(tempoMod)));
 			
 			if(beats != oldBeats){
 				while (queueCount > 0){
