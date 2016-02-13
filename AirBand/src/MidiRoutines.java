@@ -5,66 +5,76 @@ import javax.sound.midi.MidiChannel;
 
 public class MidiRoutines {
 	
-	public enum instruments{
-		Bass,
-		Rhythm,
-		Lead,
-		Percussion
-		}
-	
 	public int bassInstrument = 35;
 	public int rhythmInstrument = 27;
 	public int leadInstrument = 30;
 	
-	static long time = 0;
+	long time = 0;
 	
-	public static int bassChannel = 12;
-	public static int rhythmChannel = 2;
-	public static int leadChannel = 3;
-	public static int percussionChannel = 9;
+	public int bassChannel = 12;
+	public int rhythmChannel = 2;
+	public int leadChannel = 3;
+	public int percussionChannel = 9;
 
-	static int volume = 127; // between 0 and 127
+	int volume = 127; // between 0 and 127
 	//song tempo
-	static double tempo = 100; 
-	static long oldTime = System.nanoTime();
-	static long newTime = System.nanoTime();
-	static long delta = 0;
+	double tempo = 100; 
+	long oldTime = System.nanoTime();
+	long newTime = System.nanoTime();
+	long delta = 0;
 	
 	//for nicer calculations
-	static double tempoMod = tempo/120000000;
+	double tempoMod = tempo/120000000;
 	
 	//drum stuff
-	static boolean hit0 = true;
-	static boolean hit1 = true;
-	static boolean hit2 = true;
-	static boolean hit3 = true;
+	boolean hit0 = true;
+	boolean hit1 = true;
+	boolean hit2 = true;
+	boolean hit3 = true;
 	
-	static double beats = 0;
+	double beats = 0;
+
+	private Synthesizer n;
+	private MidiChannel[] c;
 	
 	public MidiRoutines(){
-		
+		try{
+			n = MidiSystem.getSynthesizer();
+			c = n.getChannels();
+			n.open();
+			while (true){
+				Update();
+			}
+		}
+
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
-	
-	public static void Play(MidiChannel[] channels, int id, int noteValue){
+	public static void main(String[] arg)
+	{
+		MidiRoutines m = new MidiRoutines();
+	}
+	public void Play(int id, int noteValue){
 		
 		if (id == 3)
-			channels[percussionChannel].noteOn(noteValue, volume);
+			c[percussionChannel].noteOn(noteValue, volume);
 		
 		else if (id == 0)
-			channels[bassChannel].noteOn(noteValue, volume);
+			c[bassChannel].noteOn(noteValue, volume);
 		
 		else if (id == 1)
-			channels[rhythmChannel].noteOn(noteValue, volume);
+			c[rhythmChannel].noteOn(noteValue, volume);
 		
 		else if (id == 2)
-			channels[leadChannel].noteOn(noteValue, volume);
+			c[leadChannel].noteOn(noteValue, volume);
 	}
 	
-	public void Stop(MidiChannel[] channels, int id){
-		channels[9].noteOff(id, volume);
+	public void Stop(int id){
+		c[9].noteOff(id, volume);
 	}
 	
-	public static void Update(MidiChannel[] channels){
+	public void Update(){
 			//getting the time delta
 			newTime = System.nanoTime();
 			delta += newTime - oldTime;
@@ -78,29 +88,29 @@ public class MidiRoutines {
 			beats = Math.floor(delta/(250/tempoMod));
 			
 			//Play(0, 0);
-			Drums(channels);
+			Drums();
 			oldTime = newTime;
 	}
 	
-	public static void Drums(MidiChannel[] channels){
+	public void Drums(){
 
 		//Each beat has defined hits
 		if((beats == 0)&&(hit0)){
-			Play(channels, 3, 42);
-			Play(channels, 3, 36);
+			Play(3, 42);
+			Play(3, 36);
 			hit0 = false;
 		}
 		if((beats == 1)&&(hit1)){
-			Play(channels, 3, 42);
+			Play(3, 42);
 			hit1 = false;
 		}
 		if((beats == 2)&&(hit2)){
-			Play(channels, 3, 42);
-			Play(channels, 3, 38);
+			Play(3, 42);
+			Play(3, 38);
 			hit2 = false;
 		}
 		if((beats == 3)&&(hit3)){
-			Play(channels, 3, 42);
+			Play(3, 42);
 			hit3 = false;
 		}
 	}
