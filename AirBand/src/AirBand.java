@@ -1,4 +1,6 @@
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,8 +41,35 @@ public class AirBand {
 		MidiRoutines mid = new MidiRoutines();
 		System.out.println("MIDI Initalized.");		
 		
+		ProcessBuilder pb = new ProcessBuilder("exec/cv.exe");
+		Process p;  
+		BufferedReader bri ;
+		try
+		{
+			p = pb.start();  
+		 bri = new BufferedReader(new InputStreamReader(p.getInputStream()));
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+			System.out.println("Failed to start openCV, aborting");
+			return;
+		}
+		System.out.println("openCV started.");	
+		String line;
+		
 		while(true)
 		{
+			try{
+				line = bri.readLine();
+			} catch (Exception e)
+			{
+				System.out.println("Invalid openCV output");
+				return;
+			}
+			
+			if(line != null)
+				System.out.println("OpenCv says:" + line);
+		
 			byte in = air.recieveStrums();
 			if(in == ERROR_BYTE)
 			{

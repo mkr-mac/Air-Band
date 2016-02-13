@@ -35,6 +35,8 @@ public class MidiRoutines {
 	private Instrument[] instrumentQueue = new Instrument[100];
 	private int queueCount = 0;
 	
+	private boolean transMeasure = false;
+	
 	public MidiRoutines()
 	{
 		MidiDevice.Info[] infos = MidiSystem.getMidiDeviceInfo();
@@ -125,17 +127,21 @@ public class MidiRoutines {
 		switch (beats){
 		
 		case 0:
+			transMeasure = !transMeasure;
 			//Ghetto-rigged! Undo later.
 			try
 			{
-				AirBand.c = Chord.updateChord(0,false,AirBand.c);
+				if(!transMeasure)
+				{
+					AirBand.c = Chord.updateChord(0,false,AirBand.c);
+					play(Instrument.PERCUSSION, 49);
+				}
 			} catch (Exception e)
 			{
 			
 			}
 			play(Instrument.PERCUSSION, 42);
 			play(Instrument.PERCUSSION, 36);
-			play(Instrument.PERCUSSION, 44);
 			break;
 		case 2:
 			play(Instrument.PERCUSSION, 42);
