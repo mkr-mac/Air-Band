@@ -18,10 +18,28 @@ public class ChordMap
 		{
 			map.add(new ArrayList<ArrayList<Integer>>());
 		}
-		map.get(0).add(new ArrayList<Integer>(Arrays.asList(4,0,3,7,12)));
-		map.get(4).add(new ArrayList<Integer>(Arrays.asList(5,0,4,7,12)));
-		map.get(4).add(new ArrayList<Integer>(Arrays.asList(5,0,4,7,10)));
-		map.get(5).add(new ArrayList<Integer>(Arrays.asList(0,0,3,7,10)));
+		map.get(0).add(new ArrayList<Integer>(Arrays.asList(0,0,3,7,12)));//i
+		map.get(0).add(new ArrayList<Integer>(Arrays.asList(0,0,4,7,10)));//V7/iv
+		map.get(0).add(new ArrayList<Integer>(Arrays.asList(2,0,4,7,12)));//III
+		map.get(0).add(new ArrayList<Integer>(Arrays.asList(3,0,3,7,12)));//iv
+		map.get(0).add(new ArrayList<Integer>(Arrays.asList(3,0,4,7,12)));//IV
+		map.get(0).add(new ArrayList<Integer>(Arrays.asList(4,0,4,7,10)));//V7
+		map.get(0).add(new ArrayList<Integer>(Arrays.asList(4,0,4,7,12)));//V
+		map.get(0).add(new ArrayList<Integer>(Arrays.asList(5,0,4,7,12)));//VI
+		map.get(0).add(new ArrayList<Integer>(Arrays.asList(5,0,4,7,10)));//V7/II
+		map.get(3).add(new ArrayList<Integer>(Arrays.asList(4,0,4,7,12)));
+		map.get(3).add(new ArrayList<Integer>(Arrays.asList(4,0,4,7,10)));
+		map.get(4).add(new ArrayList<Integer>(Arrays.asList(0,0,3,7,12)));
+		
+		map.get(12).add(new ArrayList<Integer>(Arrays.asList(0,0,4,7,12)));//I
+		map.get(12).add(new ArrayList<Integer>(Arrays.asList(0,0,4,7,10)));//V7/IV
+		map.get(12).add(new ArrayList<Integer>(Arrays.asList(2,0,3,7,12)));//iii
+		map.get(12).add(new ArrayList<Integer>(Arrays.asList(3,0,3,7,12)));//iv
+		map.get(12).add(new ArrayList<Integer>(Arrays.asList(3,0,4,7,12)));//IV
+		map.get(12).add(new ArrayList<Integer>(Arrays.asList(4,0,4,7,10)));//V7
+		map.get(12).add(new ArrayList<Integer>(Arrays.asList(4,0,4,7,12)));//V
+		map.get(12).add(new ArrayList<Integer>(Arrays.asList(5,0,3,7,12)));//vi
+		map.get(12).add(new ArrayList<Integer>(Arrays.asList(5,0,4,7,10)));//V7/ii
 	}
 	
 	private static boolean isDominant(ArrayList<Integer> c)
@@ -32,7 +50,7 @@ public class ChordMap
 	private static Chord resolveDominant(int root)
 	{
 		return (root>11) ? new Chord((root-7)%12,domResPat.get((int)Math.random()*4)):
-		new Chord((root+5)%12,domResPat.get((int)Math.random()*4));
+		new Chord((root-4)%12,domResPat.get((int)Math.random()*4));
 	}
 	
 	public static Chord getChord(int key, int root, ArrayList<Integer> pattern)

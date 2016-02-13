@@ -26,7 +26,7 @@ public class AirBand {
 		
 		AirBand air = new AirBand();
 		ChordMap cm = new ChordMap();
-		Chord c = new Chord(0,new ArrayList<Integer>(Arrays.asList(0,3,7,10)));
+		Chord c = new Chord(0,new ArrayList<Integer>(Arrays.asList(0,3,7,12)));
 		
 		if(!air.initSocket())
 			return;

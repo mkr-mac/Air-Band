@@ -1,0 +1,12 @@
+﻿  abcv.cpp
+..\..\abcv.cpp(69): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+..\..\abcv.cpp(70): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+..\..\abcv.cpp(42): warning C4101: 'y': unreferenced local variable
+..\..\abcv.cpp(42): warning C4101: 'lx': unreferenced local variable
+..\..\abcv.cpp(42): warning C4101: 'x': unreferenced local variable
+..\..\abcv.cpp(42): warning C4101: 'ly': unreferenced local variable
+  Generating code
+  All 48 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  cv.vcxproj -> D:\Programming\github\ab\cv\cv\x64\Release\cv.exe
+  cv.vcxproj -> D:\Programming\github\ab\cv\cv\x64\Release\cv.pdb (Full PDB)
