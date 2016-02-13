@@ -38,7 +38,7 @@ public class MidiRoutines {
 	private Synthesizer n;
 	private MidiChannel[] c;
 	
-	int[] queue = new int[1000];
+	int[] queue = new int[100];
 	int queueCount = 0;
 	
 	public MidiRoutines(){
@@ -52,16 +52,15 @@ public class MidiRoutines {
 			e.printStackTrace();
 		}
 	}
+	/*
 	public static void main(String args[]){
 		MidiRoutines m = new MidiRoutines();
 
 		while (true){
 			m.update();
-			System.out.println("lag");
-			if(Math.random() > .999)
-			m.noteQueue( 1, (int)Math.random() * 450);
 		}
 	}
+	*/
 	public void noteQueue(int id, int noteValue){
 		queue[queueCount] = id;
 		queueCount++;
@@ -75,15 +74,19 @@ public class MidiRoutines {
 		
 		case 3:
 			c[percussionChannel].noteOn(noteValue, volume);
+			break;
 		
 		case 0:
 			c[bassChannel].noteOn(noteValue, volume);
+			break;
 		
 		case 1:
 			c[rhythmChannel].noteOn(noteValue, volume);
+			break;
 		
 		case 2:
 			c[leadChannel].noteOn(noteValue, volume);
+			break;
 		}
 	}
 	
@@ -107,7 +110,7 @@ public class MidiRoutines {
 			if(beats != oldBeats){
 				while (queueCount > 0){
 					play(queue[queueCount - 1],queue[queueCount]);
-					queueCount -= 0;
+					queueCount -= 2;
 				}
 				drums();
 			}
