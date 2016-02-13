@@ -1,8 +1,17 @@
 import java.util.ArrayList;
+import java.util.Arrays;
+
 public class Chord
 {
 	private int bass;
 	private ArrayList<Integer> figure;
+	
+	public Chord(int bass, ArrayList<Integer> figure)
+	{
+		this.bass = bass;
+		this.figure = figure;
+	}
+	
 	public static string translate(int fig)
 	{
 		switch (fig)
@@ -35,7 +44,7 @@ public class Chord
 				return "Err";
 		}
 	}
-
+	
 	public int getBass()
 	{
 		return bass;
@@ -44,9 +53,9 @@ public class Chord
 	public ArrayList<Integer> getFigure()
 	{
 		return figure;
-	}
-
-
-	public static Chord updateChord(int key, Chord oldChord, int pos, boolean classical)
+	}	
+	
+	public static Chord updateChord(int key, boolean mode, Chord oldChord)
 	{
-		return  
+		return ChordMap.getChord(key,(oldChord.getBass()-key+12)%12+12*(mode?1:0)-1,oldChord.getFigure());		
+	}

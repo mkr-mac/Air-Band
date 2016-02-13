@@ -39,7 +39,7 @@ int main()
 	createTrackbar("sz","param",&sz,20);
 	int nz = 100;
 	createTrackbar("nz","param",&nz,100);
-	int x,y,lx,ly,x1,y1,lx1,ly1;
+	int x,y,lx,ly,x1,y1,lx1= 0,ly1= 0;
 	Mat frameln = Mat::zeros(frame.size(),CV_8UC3);
 	namedWindow("demo",WINDOW_AUTOSIZE);
 	namedWindow("threshold",WINDOW_AUTOSIZE);

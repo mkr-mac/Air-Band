@@ -1,0 +1,19 @@
+﻿  abcv.cpp
+d:\programming\github\ab\cv\abcv.cpp(69): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+d:\programming\github\ab\cv\abcv.cpp(70): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+d:\programming\github\ab\cv\abcv.cpp(42): warning C4101: 'y': unreferenced local variable
+d:\programming\github\ab\cv\abcv.cpp(42): warning C4101: 'lx': unreferenced local variable
+d:\programming\github\ab\cv\abcv.cpp(42): warning C4101: 'x': unreferenced local variable
+d:\programming\github\ab\cv\abcv.cpp(42): warning C4101: 'ly': unreferenced local variable
+abcv.obj : error LNK2019: unresolved external symbol "void __cdecl cv::fastFree(void *)" (?fastFree@cv@@YAXPAX@Z) referenced in function "public: __thiscall cv::Mat::~Mat(void)" (??1Mat@cv@@QAE@XZ)
+abcv.obj : error LNK2019: unresolved external symbol "private: char * __thiscall cv::String::allocate(unsigned int)" (?allocate@String@cv@@AAEPADI@Z) referenced in function "public: __thiscall cv::String::String(char const *)" (??0String@cv@@QAE@PBD@Z)
+abcv.obj : error LNK2019: unresolved external symbol "private: void __thiscall cv::String::deallocate(void)" (?deallocate@String@cv@@AAEXXZ) referenced in function "public: __thiscall cv::String::~String(void)" (??1String@cv@@QAE@XZ)
+abcv.obj : error LNK2019: unresolved external symbol "void __cdecl cv::error(int,class cv::String const &,char const *,char const *,int)" (?error@cv@@YAXHABVString@1@PBD1H@Z) referenced in function "public: __thiscall cv::Mat::Mat(class cv::Mat &&)" (??0Mat@cv@@QAE@$$QAV01@@Z)
+abcv.obj : error LNK2019: unresolved external symbol "public: static class cv::MatExpr __cdecl cv::Mat::zeros(class cv::Size_<int>,int)" (?zeros@Mat@cv@@SA?AVMatExpr@2@V?$Size_@H@2@H@Z) referenced in function _main
+abcv.obj : error LNK2019: unresolved external symbol "public: void __thiscall cv::Mat::deallocate(void)" (?deallocate@Mat@cv@@QAEXXZ) referenced in function "public: void __thiscall cv::Mat::release(void)" (?release@Mat@cv@@QAEXXZ)
+abcv.obj : error LNK2019: unresolved external symbol "void __cdecl cv::inRange(class cv::_InputArray const &,class cv::_InputArray const &,class cv::_InputArray const &,class cv::_OutputArray const &)" (?inRange@cv@@YAXABV_InputArray@1@00ABV_OutputArray@1@@Z) referenced in function _main
+abcv.obj : error LNK2019: unresolved external symbol "public: __thiscall cv::VideoCapture::VideoCapture(int)" (??0VideoCapture@cv@@QAE@H@Z) referenced in function _main
+abcv.obj : error LNK2019: unresolved external symbol "public: virtual __thiscall cv::VideoCapture::~VideoCapture(void)" (??1VideoCapture@cv@@UAE@XZ) referenced in function _main
+abcv.obj : error LNK2019: unresolved external symbol "public: virtual bool __thiscall cv::VideoCapture::isOpened(void)const " (?isOpened@VideoCapture@cv@@UBE_NXZ) referenced in function _main
+abcv.obj : error LNK2019: unresolved external symbol "public: virtual bool __thiscall cv::VideoCapture::read(class cv::_OutputArray const &)" (?read@VideoCapture@cv@@UAE_NABV_OutputArray@2@@Z) referenced in function _main
+D:\Programming\github\ab\cv\cv\Debug\cv.exe : fatal error LNK1120: 11 unresolved externals
