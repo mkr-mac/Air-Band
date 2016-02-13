@@ -33,48 +33,65 @@ public class MidiRoutines {
 	boolean hit3 = true;
 	
 	double beats = 0;
+	double oldBeats = 3;
 
 	private Synthesizer n;
 	private MidiChannel[] c;
+	
+	int[] queue = new int[1000];
+	int queueCount = 0;
 	
 	public MidiRoutines(){
 		try{
 			n = MidiSystem.getSynthesizer();
 			c = n.getChannels();
 			n.open();
-			while (true){
-				Update();
-			}
 		}
 
 		catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	public static void main(String[] arg)
-	{
+	public static void main(String args[]){
 		MidiRoutines m = new MidiRoutines();
+
+		while (true){
+			m.update();
+			System.out.println("lag");
+			if(Math.random() > .999)
+			m.noteQueue( 1, (int)Math.random() * 450);
+		}
 	}
-	public void Play(int id, int noteValue){
-		
-		if (id == 3)
-			c[percussionChannel].noteOn(noteValue, volume);
-		
-		else if (id == 0)
-			c[bassChannel].noteOn(noteValue, volume);
-		
-		else if (id == 1)
-			c[rhythmChannel].noteOn(noteValue, volume);
-		
-		else if (id == 2)
-			c[leadChannel].noteOn(noteValue, volume);
+	public void noteQueue(int id, int noteValue){
+		queue[queueCount] = id;
+		queueCount++;
+		queue[queueCount] = noteValue;
+		queueCount++;
 	}
 	
-	public void Stop(int id){
+	private void play(int id, int noteValue){
+		
+		switch (id){
+		
+		case 3:
+			c[percussionChannel].noteOn(noteValue, volume);
+		
+		case 0:
+			c[bassChannel].noteOn(noteValue, volume);
+		
+		case 1:
+			c[rhythmChannel].noteOn(noteValue, volume);
+		
+		case 2:
+			c[leadChannel].noteOn(noteValue, volume);
+		}
+	}
+	
+	public void stop(int id){
 		c[9].noteOff(id, volume);
 	}
 	
-	public void Update(){
+	public void update(){
 			//getting the time delta
 			newTime = System.nanoTime();
 			delta += newTime - oldTime;
@@ -84,33 +101,39 @@ public class MidiRoutines {
 				delta -= 1000/tempoMod;
 				hit0=hit1=hit2=hit3=true;
 			}
-
-			beats = Math.floor(delta/(250/tempoMod));
+			oldBeats = beats;
+			beats = Math.floor(delta/(125/tempoMod));
 			
-			//Play(0, 0);
-			Drums();
+			if(beats != oldBeats){
+				while (queueCount > 0){
+					play(queue[queueCount - 1],queue[queueCount]);
+					queueCount -= 0;
+				}
+				drums();
+			}
+			
 			oldTime = newTime;
 	}
 	
-	public void Drums(){
+	public void drums(){
 
 		//Each beat has defined hits
 		if((beats == 0)&&(hit0)){
-			Play(3, 42);
-			Play(3, 36);
+			play(3, 42);
+			play(3, 36);
 			hit0 = false;
 		}
-		if((beats == 1)&&(hit1)){
-			Play(3, 42);
+		else if((beats == 2)&&(hit1)){
+			play(3, 42);
 			hit1 = false;
 		}
-		if((beats == 2)&&(hit2)){
-			Play(3, 42);
-			Play(3, 38);
+		else if((beats == 4)&&(hit2)){
+			play(3, 42);
+			play(3, 38);
 			hit2 = false;
 		}
-		if((beats == 3)&&(hit3)){
-			Play(3, 42);
+		else if((beats == 6)&&(hit3)){
+			play(3, 42);
 			hit3 = false;
 		}
 	}
