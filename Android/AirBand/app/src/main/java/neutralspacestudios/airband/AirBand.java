@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
@@ -30,9 +31,7 @@ public class AirBand extends Activity implements SensorEventListener{
     Button  bass,gtr,lead;
     TextView counter;
     private byte instrument;
-     ViewFlipper vf;
-
-
+    ViewFlipper vf;
 
     @Override
     public void onAccuracyChanged(Sensor s,int foo)
@@ -54,25 +53,57 @@ public class AirBand extends Activity implements SensorEventListener{
         counter = (TextView)findViewById(R.id.count);
         vf = (ViewFlipper) findViewById( R.id.viewFlipper );
         canStrum = true;
-        bass = (Button)findViewById(R.id.bassButton);
-        gtr = (Button)findViewById(R.id.gtrButton);
-        lead = (Button)findViewById(R.id.leadButton);
-        bass.setOnClickListener(new View.OnClickListener() {
+
+
+        ((Button)findViewById(R.id.bassButton)).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 instrument = 0;
+                fetchPortAndIP();
                 vf.showNext();
             }
         });
 
-        gtr.setOnClickListener(new View.OnClickListener() {
+        ((Button)findViewById(R.id.gtrButton)).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 instrument = 1;
+                fetchPortAndIP();
                 vf.showNext();
             }
         });
-        lead.setOnClickListener(new View.OnClickListener() {
+        ((Button)findViewById(R.id.leadButton)).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 instrument = 2;
+                fetchPortAndIP();
+                vf.showNext();
+            }
+        });
+
+        ((Button)findViewById(R.id.piano)).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                instrument = 3;
+                fetchPortAndIP();
+                vf.showNext();
+            }
+        });
+
+        ((Button)findViewById(R.id.synth)).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                instrument = 4;
+                fetchPortAndIP();
+                vf.showNext();
+            }
+        });
+        ((Button)findViewById(R.id.trumpet)).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                instrument = 5;
+                fetchPortAndIP();
+                vf.showNext();
+            }
+        });
+        ((Button)findViewById(R.id.flute)).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                instrument = 6;
+                fetchPortAndIP();
                 vf.showNext();
             }
         });
@@ -96,6 +127,13 @@ public class AirBand extends Activity implements SensorEventListener{
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_air_band, menu);
         return true;
+    }
+
+    public void fetchPortAndIP()
+    {
+        SendStrumGram.PORT = Integer.parseInt( ((EditText)findViewById(R.id.port)).getText().toString());
+        SendStrumGram.ip = ((EditText)findViewById(R.id.ip)).getText().toString();
+        Log.v("Neutralde",SendStrumGram.ip + " " + SendStrumGram.PORT);
     }
 
     @Override

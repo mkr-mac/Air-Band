@@ -24,23 +24,65 @@
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Play Bass"
+                android:text="Play Bass (Requires Wristband)"
                 android:id="@+id/bassButton"
                 android:layout_weight="1" />
 
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Play Rhythm Guitar"
+                android:text="Play Rhythm Guitar (Requires Wristband)"
                 android:id="@+id/gtrButton"
                 android:layout_weight="1" />
 
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Play Lead Guitar"
+                android:text="Play Lead Guitar (Requires Wristband)"
                 android:id="@+id/leadButton"
                 android:layout_weight="1" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Play Piano"
+                android:layout_weight="1"
+                android:id="@+id/piano" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Play 80&apos;s Synth"
+                android:layout_weight="1"
+                android:id="@+id/synth" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Play Trumpet"
+                android:layout_weight="1"
+                android:id="@+id/trumpet" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Play Flute"
+                android:layout_weight="1"
+                android:id="@+id/flute" />
+
+            <EditText
+                android:layout_width="327dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/ip"
+                android:layout_weight="1"
+                android:text="ip" />
+
+            <EditText
+                android:layout_width="338dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/port"
+                android:layout_weight="1"
+                android:text="port" />
 
         </LinearLayout>
 
