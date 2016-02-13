@@ -16,9 +16,14 @@ public class AirBand {
 	public static final byte ERROR_BYTE = -1;
 	// This is returned if there was no note.
 	public static final byte NO_NOTE = -2;
+	
 	public static final byte BASS_BYTE = 0;
 	public static final byte GUITAR_BYTE = 1;
 	public static final byte LEAD_BYTE = 2;
+	public static final byte PIANO_BYTE = 3;
+	public static final byte SYNTH_BYTE = 4;
+	public static final byte BRASS_BYTE = 5;
+	public static final byte FLUTE_BYTE = 6;
 	
 	private DatagramPacket packet;
 	private byte buf[];
@@ -78,7 +83,7 @@ public class AirBand {
 			}
 			if(in == BASS_BYTE)
 			{
-				mid.noteQueue(MidiRoutines.Instrument.BASS, 24 + c.getBass()); 
+				mid.noteQueue(MidiRoutines.Instrument.BASS, 36 + c.getBass()); 
 			}
 			if(in == GUITAR_BYTE)
 			{
@@ -90,6 +95,22 @@ public class AirBand {
 			if(in == LEAD_BYTE)
 			{
 				mid.noteQueue(MidiRoutines.Instrument.LEAD, 60 + c.getBass() + c.getFigure().get((int)(Math.random()*c.getFigure().size()))); 
+			}
+			if(in == PIANO_BYTE)
+			{
+				mid.noteQueue(MidiRoutines.Instrument.PIANO, 60 + c.getBass() + c.getFigure().get((int)(Math.random()*c.getFigure().size()))); 
+			}
+			if(in == SYNTH_BYTE)
+			{
+				mid.noteQueue(MidiRoutines.Instrument.SYNTH, 60 + c.getBass() + c.getFigure().get((int)(Math.random()*c.getFigure().size()))); 
+			}
+			if(in == BRASS_BYTE)
+			{
+				mid.noteQueue(MidiRoutines.Instrument.TRUMPET, 60 + c.getBass() + c.getFigure().get((int)(Math.random()*c.getFigure().size()))); 
+			}
+			if(in == FLUTE_BYTE)
+			{
+				mid.noteQueue(MidiRoutines.Instrument.FLUTE, 60 + c.getBass() + c.getFigure().get((int)(Math.random()*c.getFigure().size()))); 
 			}
 
 				mid.update();
