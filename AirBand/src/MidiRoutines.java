@@ -103,8 +103,8 @@ public class MidiRoutines {
 			delta += newTime - oldTime;
 
 			//keep the delta small for calculation reasons
-			while (delta >= 1000/tempoMod){
-				delta -= 1000/tempoMod;
+			while (delta >= 2000/tempoMod){
+				delta -= 2000/tempoMod;
 			}
 			oldBeats = beats;
 			beats = (int) Math.floor(delta/(125/(tempoMod)));
