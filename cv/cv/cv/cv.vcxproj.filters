@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\abcv.cpp">
+    <ClCompile Include="..\..\abcvfix.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
