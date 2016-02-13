@@ -1,5 +1,7 @@
 
 import java.net.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.sound.midi.MidiChannel;
 import javax.sound.midi.MidiSystem;
@@ -22,6 +24,9 @@ public class AirBand {
 	{
 		
 		AirBand air = new AirBand();
+		ChordMap cm = new ChordMap();
+		Chord c = new Chord(0,new ArrayList<Integer>(Arrays.asList(0,3,7,10)));
+		
 		if(!air.initSocket())
 			return;
 		
@@ -30,7 +35,9 @@ public class AirBand {
 		MidiRoutines mid = new MidiRoutines();
 		System.out.println("MIDI Initalized.");
 		
-		int[] notes = {60,62,64,67,69};
+		ArrayList<Integer> notes = c.getFigure();
+		
+		
 		while(true)
 		{
 			byte in = air.recieveStrums();
@@ -40,7 +47,11 @@ public class AirBand {
 				return;
 			} else if(in != NO_NOTE)
 			{
-				mid.noteQueue(in, notes[(int)(Math.random()*5)]);
+				for(Integer interval : notes)
+				{
+					mid.noteQueue(in, 60 + interval); 
+				}
+				c = Chord.updateChord(0,false,c);
 			}
 				mid.update();
 		}

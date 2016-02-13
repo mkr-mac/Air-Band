@@ -8,7 +8,7 @@ public class MidiRoutines {
 	
 	private int bassInstrument = 35;
 	private int rhythmInstrument = 27;
-	private int leadInstrument = 30;
+	private int leadInstrument = 31;
 	
 	private int bassChannel = 1;
 	private int rhythmChannel = 2;

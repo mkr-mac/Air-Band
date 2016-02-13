@@ -17,7 +17,7 @@ public class AirBandClientTest {
 	            byte[] buf = new byte[3];
 	            buf[0] = 4;
 	            buf[1] = 20;
-	            buf[2] = 2;
+	            buf[2] = 1;
 	            InetAddress address = InetAddress.getByName(ip);
 	            DatagramPacket packet = new DatagramPacket(buf, buf.length, address, PORT);
 	            socket.send(packet);

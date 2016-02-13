@@ -12,7 +12,7 @@ public class Chord
 		this.figure = figure;
 	}
 	
-	public static string translate(int fig)
+	public static String translate(int fig)
 	{
 		switch (fig)
 		{
@@ -57,6 +57,6 @@ public class Chord
 	
 	public static Chord updateChord(int key, boolean mode, Chord oldChord)
 	{
-		return ChordMap.getChord(key,(oldChord.getBass()-key+12)%12+12*(mode?1:0)-1,oldChord.getFigure());		
+		return ChordMap.getChord(key,(oldChord.getBass()-key+12)%12+12*(mode?1:0),oldChord.getFigure());		
 	}
 }
