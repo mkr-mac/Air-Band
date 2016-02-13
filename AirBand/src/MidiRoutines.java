@@ -125,8 +125,17 @@ public class MidiRoutines {
 		switch (beats){
 		
 		case 0:
+			//Ghetto-rigged! Undo later.
+			try
+			{
+				AirBand.c = Chord.updateChord(0,false,AirBand.c);
+			} catch (Exception e)
+			{
+			
+			}
 			play(Instrument.PERCUSSION, 42);
 			play(Instrument.PERCUSSION, 36);
+			play(Instrument.PERCUSSION, 44);
 			break;
 		case 2:
 			play(Instrument.PERCUSSION, 42);

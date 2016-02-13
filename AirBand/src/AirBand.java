@@ -21,12 +21,15 @@ public class AirBand {
 	private DatagramPacket packet;
 	private byte buf[];
 	
+	public static ChordMap cm;
+	public static Chord c;
+	
 	public static void main (String args[])
 	{
 		
 		AirBand air = new AirBand();
-		ChordMap cm = new ChordMap();
-		Chord c = new Chord(0,new ArrayList<Integer>(Arrays.asList(0,3,7,12)));
+		cm = new ChordMap();
+		c = new Chord(0,new ArrayList<Integer>(Arrays.asList(0,3,7,12)));
 		
 		if(!air.initSocket())
 			return;
@@ -60,7 +63,6 @@ public class AirBand {
 				mid.noteQueue(MidiRoutines.Instrument.LEAD, 60 + c.getBass() + c.getFigure().get((int)(Math.random()*c.getFigure().size()))); 
 			}
 
-				//c = Chord.updateChord(0,false,c);
 				mid.update();
 		}
 	}
@@ -92,6 +94,7 @@ public class AirBand {
 			if(buf[0] == 4 && buf[1] == 20)
 			{
 
+				System.out.println("test");
 				return buf[2];
 			}
 			System.out.println("Bad Traffic!");
