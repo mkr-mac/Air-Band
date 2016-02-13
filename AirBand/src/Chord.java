@@ -59,3 +59,4 @@ public class Chord
 	{
 		return ChordMap.getChord(key,(oldChord.getBass()-key+12)%12+12*(mode?1:0)-1,oldChord.getFigure());		
 	}
+}
