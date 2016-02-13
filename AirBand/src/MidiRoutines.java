@@ -105,7 +105,7 @@ public class MidiRoutines {
 				hit0=hit1=hit2=hit3=true;
 			}
 			oldBeats = beats;
-			beats = Math.floor(delta/(125/tempoMod));
+			beats = Math.floor(delta/(125/(2*tempoMod)));
 			
 			if(beats != oldBeats){
 				while (queueCount > 0){
