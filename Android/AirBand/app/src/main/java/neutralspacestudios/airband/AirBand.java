@@ -15,9 +15,15 @@ import android.widget.TextView;
 
 
 public class AirBand extends Activity implements SensorEventListener {
+    private float IDLETHRESH = 2;
+    private float STRUMTHRESH = 20;
+
     private SensorManager senSensorManager;
     private Sensor senAccelerometer;
+    private byte id = 1;
+    private boolean canStrum;
     TextView x,y,z;
+    TextView counter;
 
 
     @Override
@@ -36,7 +42,8 @@ public class AirBand extends Activity implements SensorEventListener {
         x = (TextView)findViewById(R.id.textView);
         y = (TextView)findViewById(R.id.textView2);
         z = (TextView)findViewById(R.id.textView3);
-
+        counter = (TextView)findViewById(R.id.count);
+        canStrum = true;
     }
 
     @Override
@@ -72,7 +79,26 @@ public class AirBand extends Activity implements SensorEventListener {
             x.setText("X: " + (int)nx);
             y.setText("Y: " + (int)ny);
             z.setText("Z: " + (int)nz);
+
+
+            // Don't strum unless we return to normal
+            if(nx + ny < (11f  + IDLETHRESH) &&  nx + ny > (11f - IDLETHRESH))
+            {
+                canStrum = true;
+            }
+
+
+            if(canStrum && (nx + ny > (11f  + STRUMTHRESH) || nx + ny < (11f - STRUMTHRESH)))
+            {
+                canStrum = false;
+                new SendStrumGram().execute(this);
+            }
         }
+    }
+
+    public byte getID()
+    {
+        return id;
     }
 
 }
