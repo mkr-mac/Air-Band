@@ -33,10 +33,7 @@ public class AirBand {
 		System.out.println("Socket set up.");
 		
 		MidiRoutines mid = new MidiRoutines();
-		System.out.println("MIDI Initalized.");
-		
-		ArrayList<Integer> notes = c.getFigure();
-		
+		System.out.println("MIDI Initalized.");		
 		
 		while(true)
 		{
@@ -47,9 +44,10 @@ public class AirBand {
 				return;
 			} else if(in != NO_NOTE)
 			{
-				for(Integer interval : notes)
+				for(Integer interval : c.getFigure())
 				{
 					mid.noteQueue(in, 60 + interval); 
+					System.out.println(interval);
 				}
 				c = Chord.updateChord(0,false,c);
 			}

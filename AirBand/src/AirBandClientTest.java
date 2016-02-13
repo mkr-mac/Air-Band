@@ -5,7 +5,7 @@ import java.net.InetAddress;
 public class AirBandClientTest {
 	
 	    private static final int PORT = 45320;
-	    private static final String ip = "172.19.37.183";
+	    private static final String ip = "localhost";
 	    
 	    public static void main(String[] arg)
 	    {
