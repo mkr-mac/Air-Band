@@ -2,5 +2,16 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="lib/jgoodies-forms.jar" sourcepath="lib/jgoodies-forms-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/AirBand/lib/jgoodies-forms-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/jgoodies-common.jar" sourcepath="lib/jgoodies-common-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/AirBand/lib/jgoodies-common-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
