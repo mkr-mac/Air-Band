@@ -126,16 +126,16 @@ public class MidiRoutines {
 			play(3, 36);
 			hit0 = false;
 		}
-		else if((beats == 2)&&(hit1)){
+		else if((beats == 4)&&(hit1)){
 			play(3, 42);
 			hit1 = false;
 		}
-		else if((beats == 4)&&(hit2)){
+		else if((beats == 8)&&(hit2)){
 			play(3, 42);
 			play(3, 38);
 			hit2 = false;
 		}
-		else if((beats == 6)&&(hit3)){
+		else if((beats == 12)&&(hit3)){
 			play(3, 42);
 			hit3 = false;
 		}
