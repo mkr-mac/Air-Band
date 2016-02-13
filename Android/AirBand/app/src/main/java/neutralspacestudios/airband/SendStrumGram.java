@@ -23,7 +23,7 @@ public class SendStrumGram extends AsyncTask<AirBand,Void,Boolean> {
 
     private String cert;
     private static final int PORT = 45320;
-    private static final String ip = "192.168.0.1";
+    private static final String ip = "172.19.37.183";
     private static int strumCount = 0;
     private static AirBand airband;
 
