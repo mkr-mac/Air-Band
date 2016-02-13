@@ -1,14 +1,13 @@
 
-import javax.sound.midi.Instrument;
+import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiSystem;
-import javax.sound.midi.Synthesizer;
-import javax.sound.midi.MidiChannel;
+import javax.sound.midi.Receiver;
+import javax.sound.midi.ShortMessage;
+import javax.sound.midi.MidiDevice;
 
 public class MidiRoutines {
 	
-	private int bassInstrument = 35;
-	private int rhythmInstrument = 27;
-	private int leadInstrument = 31;
+	enum Instrument { BASS, RHYTHM, LEAD, PERCUSSION};
 	
 	private int bassChannel = 1;
 	private int rhythmChannel = 2;
@@ -16,6 +15,7 @@ public class MidiRoutines {
 	private int percussionChannel = 9;
 
 	private int volume = 127; // between 0 and 127
+	
 	//song tempo
 	private double tempo = 100; 
 	private long oldTime = System.nanoTime();
@@ -28,27 +28,32 @@ public class MidiRoutines {
 	private int beats = 0;
 	private double oldBeats = 3;
 
-	private Synthesizer n;
-	private MidiChannel[] c;
-	private Instrument[] instr;
+	private MidiDevice device;
+	private Receiver reciever;
 	
-	private int[] queue = new int[100];
+	private int[] noteQueue = new int[100];
+	private Instrument[] instrumentQueue = new Instrument[100];
 	private int queueCount = 0;
 	
-	public MidiRoutines(){
-		try{
-			n = MidiSystem.getSynthesizer();
-			c = n.getChannels();
-			n.open();
+	public MidiRoutines()
+	{
+		MidiDevice.Info[] infos = MidiSystem.getMidiDeviceInfo();
+		for(MidiDevice.Info inf : infos)
+		{
+			if(inf.getName().equals("NeutralPort"))
+			{
+				try
+				{
+					device = MidiSystem.getMidiDevice(inf);
+		    		device.open();
+		    		reciever = device.getReceiver();
+				} catch (Exception e)
+				{
+					device.close();
+					continue;
+				}
+		     }
 		}
-
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		c[bassChannel].programChange(bassInstrument);
-		c[rhythmChannel].programChange(rhythmInstrument);
-		c[leadChannel].programChange(leadInstrument);
 	}
 	
 	public static void main(String args[]){
@@ -58,39 +63,40 @@ public class MidiRoutines {
 			m.update();
 		}
 	}
-	public void noteQueue(int id, int noteValue){
-		queue[queueCount] = id;
-		queueCount++;
-		queue[queueCount] = noteValue;
+	public void noteQueue(Instrument i, int noteValue){
+		noteQueue[queueCount] = noteValue;
+		instrumentQueue[queueCount] = i;
 		queueCount++;
 	}
 	
-	private void play(int id, int noteValue){
+	private void play(Instrument i, int noteValue){
 		
-		switch (id){
-		
-		case 3:
-			c[percussionChannel].noteOn(noteValue, volume);
+		int channel = 0;
+		switch (i){
+		case BASS:
+			channel = bassChannel;
 			break;
-		
-		case 0:
-			c[bassChannel].noteOn(noteValue, volume);
+		case RHYTHM:
+			channel = rhythmChannel;
 			break;
-		
-		case 1:
-			c[rhythmChannel].noteOn(noteValue, volume);
+		case LEAD:
+			channel = leadChannel;
 			break;
-		
-		case 2:
-			c[leadChannel].noteOn(noteValue, volume);
+		case PERCUSSION:
+			channel = percussionChannel;
 			break;
+		}
+	
+		try {
+			ShortMessage myMsg = new ShortMessage();
+			myMsg.setMessage(ShortMessage.NOTE_ON, channel, noteValue, volume);
+			reciever.send(myMsg, -1);
+		} catch (InvalidMidiDataException e) {
+			e.printStackTrace();
 		}
 	}
 	
-	private void stop(int id){
-		c[9].noteOff(id, volume);
-	}
-	
+
 	public void update(){
 			//getting the time delta
 			newTime = System.nanoTime();
@@ -105,8 +111,8 @@ public class MidiRoutines {
 			
 			if(beats != oldBeats){
 				while (queueCount > 0){
-					play(queue[queueCount - 2],queue[queueCount - 1]);
-					queueCount -= 2;
+					play(instrumentQueue[queueCount - 1],noteQueue[queueCount - 1]);
+					queueCount--;
 				}
 				drums();
 			}
@@ -119,32 +125,32 @@ public class MidiRoutines {
 		switch (beats){
 		
 		case 0:
-			play(3, 42);
-			play(3, 36);
+			play(Instrument.PERCUSSION, 42);
+			play(Instrument.PERCUSSION, 36);
 			break;
 		case 2:
-			play(3, 42);
+			play(Instrument.PERCUSSION, 42);
 			break;
 		case 4:
-			play(3, 42);
-			play(3, 38);
+			play(Instrument.PERCUSSION, 42);
+			play(Instrument.PERCUSSION, 38);
 			break;
 		case 6:
-			play(3, 42);
+			play(Instrument.PERCUSSION, 42);
 			break;
 		case 8:
-			play(3, 42);
-			play(3, 36);
+			play(Instrument.PERCUSSION, 42);
+			play(Instrument.PERCUSSION, 36);
 			break;
 		case 10:
-			play(3, 42);
+			play(Instrument.PERCUSSION, 42);
 			break;
 		case 12:
-			play(3, 42);
-			play(3, 38);
+			play(Instrument.PERCUSSION, 42);
+			play(Instrument.PERCUSSION, 38);
 			break;
 		case 14:
-			play(3, 42);
+			play(Instrument.PERCUSSION, 42);
 			break;
 		}
 	}

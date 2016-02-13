@@ -3,10 +3,7 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import javax.sound.midi.MidiChannel;
-import javax.sound.midi.MidiSystem;
-import javax.sound.midi.MidiUnavailableException;
-import javax.sound.midi.Synthesizer;
+
 
 public class AirBand {
 	
@@ -17,6 +14,10 @@ public class AirBand {
 	public static final byte ERROR_BYTE = -1;
 	// This is returned if there was no note.
 	public static final byte NO_NOTE = -2;
+	public static final byte BASS_BYTE = 0;
+	public static final byte GUITAR_BYTE = 1;
+	public static final byte LEAD_BYTE = 2;
+	
 	private DatagramPacket packet;
 	private byte buf[];
 	
@@ -42,15 +43,24 @@ public class AirBand {
 			{
 				System.out.println("Socket Crashed");
 				return;
-			} else if(in != NO_NOTE)
+			}
+			if(in == BASS_BYTE)
+			{
+				mid.noteQueue(MidiRoutines.Instrument.BASS, 24 + c.getBass()); 
+			}
+			if(in == GUITAR_BYTE)
 			{
 				for(Integer interval : c.getFigure())
 				{
-					mid.noteQueue(in, 60 + c.getBass()+ interval); 
-					System.out.println(interval);
+					mid.noteQueue(MidiRoutines.Instrument.RHYTHM, 48 + c.getBass()+ interval); 
 				}
-				c = Chord.updateChord(0,false,c);
 			}
+			if(in == LEAD_BYTE)
+			{
+				mid.noteQueue(MidiRoutines.Instrument.LEAD, 60 + c.getBass() + c.getFigure().get((int)(Math.random()*c.getFigure().size()))); 
+			}
+
+				//c = Chord.updateChord(0,false,c);
 				mid.update();
 		}
 	}
@@ -81,6 +91,7 @@ public class AirBand {
 			// Handshake to prevent random traffic.
 			if(buf[0] == 4 && buf[1] == 20)
 			{
+
 				return buf[2];
 			}
 			System.out.println("Bad Traffic!");
