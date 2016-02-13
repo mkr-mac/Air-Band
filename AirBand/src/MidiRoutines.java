@@ -26,13 +26,7 @@ public class MidiRoutines {
 	//for nicer calculations
 	double tempoMod = tempo/120000000;
 	
-	//drum stuff
-	boolean hit0 = true;
-	boolean hit1 = true;
-	boolean hit2 = true;
-	boolean hit3 = true;
-	
-	double beats = 0;
+	int beats = 0;
 	double oldBeats = 3;
 
 	private Synthesizer n;
@@ -102,14 +96,13 @@ public class MidiRoutines {
 			//keep the delta small for calculation reasons
 			while (delta >= 1000/tempoMod){
 				delta -= 1000/tempoMod;
-				hit0=hit1=hit2=hit3=true;
 			}
 			oldBeats = beats;
-			beats = Math.floor(delta/(125/(2*tempoMod)));
+			beats = (int) Math.floor(delta/(125/(2*tempoMod)));
 			
 			if(beats != oldBeats){
 				while (queueCount > 0){
-					play(queue[queueCount - 1],queue[queueCount]);
+					play(queue[queueCount - 2],queue[queueCount - 1]);
 					queueCount -= 2;
 				}
 				drums();
@@ -120,24 +113,36 @@ public class MidiRoutines {
 	
 	public void drums(){
 
-		//Each beat has defined hits
-		if((beats == 0)&&(hit0)){
+		switch (beats){
+		
+		case 0:
 			play(3, 42);
 			play(3, 36);
-			hit0 = false;
-		}
-		else if((beats == 4)&&(hit1)){
+			break;
+		case 2:
 			play(3, 42);
-			hit1 = false;
-		}
-		else if((beats == 8)&&(hit2)){
+			break;
+		case 4:
 			play(3, 42);
 			play(3, 38);
-			hit2 = false;
-		}
-		else if((beats == 12)&&(hit3)){
+			break;
+		case 6:
 			play(3, 42);
-			hit3 = false;
+			break;
+		case 8:
+			play(3, 42);
+			play(3, 36);
+			break;
+		case 10:
+			play(3, 42);
+			break;
+		case 12:
+			play(3, 42);
+			play(3, 38);
+			break;
+		case 14:
+			play(3, 42);
+			break;
 		}
 	}
 }
