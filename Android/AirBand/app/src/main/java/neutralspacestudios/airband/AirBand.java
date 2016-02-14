@@ -164,6 +164,7 @@ public class AirBand extends Activity implements SensorEventListener{
                 if(a == event.ACTION_UP && (instrument == 6)) {
                    Log.v("NeutralDe","AY!");
                     new SendStrumGram().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, SendStrumGram.VIOLIN_OFF);
+                    return true;
                 }
                 return false;
             }
