@@ -118,11 +118,13 @@ public class Package {
 			public void actionPerformed(ActionEvent e) {
 				try{
 					int a = Integer.parseInt(textField.getText());
-					if((a < 10)||(a > 400)){
+					if((a <= 90)||(a >= 150)){
 						textField.setText("");
 						textField.setBackground(Color.RED);
 					}else{
 						MidiRoutines.setTempo(a);
+						frame.setVisible(false);
+						frame.dispose();
 					}
 				}
 				catch(Exception ei){
