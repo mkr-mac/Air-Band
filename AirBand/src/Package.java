@@ -20,9 +20,11 @@ import java.io.IOException;
 
 public class Package {
 
-	private JFrame frame;
+	public JFrame frame;
 	private JComboBox comboBox;
 	private JTextField textField;
+	
+	boolean isAlive = true;
 	
 	JCheckBox chckbxNewCheckBox;
 	JCheckBox checkBox;
@@ -86,17 +88,17 @@ public class Package {
 		lblSoundCheck.setBounds(84, 102, 213, 50);
 		frame.getContentPane().add(lblSoundCheck);
 		
-		JLabel lblBass = DefaultComponentFactory.getInstance().createLabel("Bass");
+		JLabel lblBass = DefaultComponentFactory.getInstance().createLabel("Piano");
 		lblBass.setFont(new Font("Tahoma", Font.BOLD, 32));
 		lblBass.setBounds(76, 154, 88, 26);
 		frame.getContentPane().add(lblBass);
 		
-		JLabel lblRhythm = DefaultComponentFactory.getInstance().createLabel("Rhythm");
+		JLabel lblRhythm = DefaultComponentFactory.getInstance().createLabel("Guitar");
 		lblRhythm.setFont(new Font("Tahoma", Font.BOLD, 32));
 		lblRhythm.setBounds(76, 190, 181, 39);
 		frame.getContentPane().add(lblRhythm);
 		
-		JLabel lblLead = DefaultComponentFactory.getInstance().createLabel("Sax");
+		JLabel lblLead = DefaultComponentFactory.getInstance().createLabel("Bass");
 		lblLead.setFont(new Font("Tahoma", Font.BOLD, 32));
 		lblLead.setBounds(76, 232, 104, 39);
 		frame.getContentPane().add(lblLead);
@@ -123,6 +125,7 @@ public class Package {
 						textField.setBackground(Color.RED);
 					}else{
 						MidiRoutines.setTempo(a);
+						isAlive = false;
 						frame.setVisible(false);
 						frame.dispose();
 					}
@@ -138,22 +141,22 @@ public class Package {
 		btnReady.setBounds(329, 281, 213, 124);
 		frame.getContentPane().add(btnReady);
 		
-		JLabel lblNewJgoodiesLabel = DefaultComponentFactory.getInstance().createLabel("Piano");
+		JLabel lblNewJgoodiesLabel = DefaultComponentFactory.getInstance().createLabel("Synth");
 		lblNewJgoodiesLabel.setFont(new Font("Tahoma", Font.BOLD, 32));
 		lblNewJgoodiesLabel.setBounds(76, 277, 114, 39);
 		frame.getContentPane().add(lblNewJgoodiesLabel);
 		
-		JLabel lblNewJgoodiesLabel_1 = DefaultComponentFactory.getInstance().createLabel("Flute");
+		JLabel lblNewJgoodiesLabel_1 = DefaultComponentFactory.getInstance().createLabel("Sax");
 		lblNewJgoodiesLabel_1.setFont(new Font("Tahoma", Font.BOLD, 32));
 		lblNewJgoodiesLabel_1.setBounds(76, 414, 98, 39);
 		frame.getContentPane().add(lblNewJgoodiesLabel_1);
 		
-		JLabel lblNewJgoodiesLabel_2 = DefaultComponentFactory.getInstance().createLabel("Brass");
+		JLabel lblNewJgoodiesLabel_2 = DefaultComponentFactory.getInstance().createLabel("Violin");
 		lblNewJgoodiesLabel_2.setFont(new Font("Tahoma", Font.BOLD, 32));
 		lblNewJgoodiesLabel_2.setBounds(76, 367, 114, 39);
 		frame.getContentPane().add(lblNewJgoodiesLabel_2);
 		
-		JLabel lblNewJgoodiesLabel_3 = DefaultComponentFactory.getInstance().createLabel("Synth");
+		JLabel lblNewJgoodiesLabel_3 = DefaultComponentFactory.getInstance().createLabel("Flute");
 		lblNewJgoodiesLabel_3.setFont(new Font("Tahoma", Font.BOLD, 32));
 		lblNewJgoodiesLabel_3.setBounds(76, 326, 127, 35);
 		frame.getContentPane().add(lblNewJgoodiesLabel_3);

@@ -47,6 +47,8 @@ public class AirBand {
 		
 		AirBand air = new AirBand();
 		Package p = new Package();
+		p.frame.setVisible(true);
+		
 		cm = new ChordMap();
 		c = new Chord(0,new ArrayList<Integer>(Arrays.asList(0,3,7,12)));
 		
@@ -61,6 +63,13 @@ public class AirBand {
 		while(true)
 		{		
 			byte in = air.recieveStrums();
+			
+			if(p.isAlive)
+			{
+				p.soundCheckUpdate(noteToInst(in), true);
+			}
+			else
+			{
 			if(in == ERROR_BYTE)
 			{
 				System.out.println("Socket Crashed");
@@ -164,6 +173,7 @@ public class AirBand {
 
 				
 			mid.update();
+			}
 		}
 	}
 	
@@ -215,4 +225,17 @@ public class AirBand {
 		}	
 		return ERROR_BYTE;
     }
+	
+	
+	private static int noteToInst(byte note)
+	{
+		if(note == PIANO_PLAY)
+			return 1;
+		if(note == GUITAR_STRUM)
+			return 2;
+		if(note == BASS_STRUM)
+			return 3;
+		//TODO
+		return 0;
+	}
 }
