@@ -150,7 +150,8 @@ public class ChordMap
 		//c5th
 		map.get(23).add(new ArrayList<Integer>(Arrays.asList(17,0,4,7,12)));//V7
 
-		
+
+		scales = new ArrayList<ArrayList<Integer>>();
 		scales.add(new ArrayList<Integer>(Arrays.asList(0,2,4,5,7,9,11,12)));
 		scales.add(new ArrayList<Integer>(Arrays.asList(0,2,4,5,7,9,10,12)));
 		scales.add(new ArrayList<Integer>(Arrays.asList(0,2,3,5,7,9,10,12)));

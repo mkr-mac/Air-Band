@@ -152,6 +152,8 @@ public class MidiRoutines {
 				{
 					AirBand.c = Chord.updateChord(0,false,AirBand.c);
 					play(Instrument.PERCUSSION, 49);
+					AirBand.pianoInversionUp = true;
+					AirBand.pianoInversionCounter = 0;
 				}
 			} catch (Exception e)
 			{
