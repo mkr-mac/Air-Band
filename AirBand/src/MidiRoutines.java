@@ -7,11 +7,11 @@ import javax.sound.midi.MidiDevice;
 
 public class MidiRoutines {
 	
-	enum Instrument { BASS, RHYTHM, LEAD, PERCUSSION, PIANO, SYNTH, TRUMPET, FLUTE};
+	enum Instrument { BASS, RHYTHM, SAX, PERCUSSION, PIANO, SYNTH, TRUMPET, FLUTE};
 	
 	private int bassChannel = 1;
 	private int rhythmChannel = 2;
-	private int leadChannel = 3;
+	private int saxChannel = 3;
 	private int pianoChannel = 4;
 	private int synthChannel = 5;
 	private int trumpetChannel = 6;
@@ -86,8 +86,8 @@ public class MidiRoutines {
 		case RHYTHM:
 			channel = rhythmChannel;
 			break;
-		case LEAD:
-			channel = leadChannel;
+		case SAX:
+			channel = saxChannel;
 			break;
 		case PIANO:
 			channel = pianoChannel;
@@ -109,6 +109,46 @@ public class MidiRoutines {
 		try {
 			ShortMessage myMsg = new ShortMessage();
 			myMsg.setMessage(ShortMessage.NOTE_ON, channel, noteValue, volume);
+			reciever.send(myMsg, -1);
+		} catch (InvalidMidiDataException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void stop(Instrument i, int noteValue){
+		
+		//dirty af m9
+		int channel = 0;
+		switch (i){
+		case BASS:
+			channel = bassChannel;
+			break;
+		case RHYTHM:
+			channel = rhythmChannel;
+			break;
+		case SAX:
+			channel = saxChannel;
+			break;
+		case PIANO:
+			channel = pianoChannel;
+			break;
+		case SYNTH:
+			channel = synthChannel;
+			break;
+		case TRUMPET:
+			channel = trumpetChannel;
+			break;
+		case FLUTE:
+			channel = fluteChannel;
+			break;
+		case PERCUSSION:
+			channel = percussionChannel;
+			break;
+		}
+	
+		try {
+			ShortMessage myMsg = new ShortMessage();
+			myMsg.setMessage(ShortMessage.NOTE_OFF, channel, noteValue, volume);
 			reciever.send(myMsg, -1);
 		} catch (InvalidMidiDataException e) {
 			e.printStackTrace();

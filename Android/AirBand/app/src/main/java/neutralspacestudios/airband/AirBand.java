@@ -8,8 +8,8 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.MediaRecorder;
 import android.os.AsyncTask;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,7 +17,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
@@ -28,10 +27,13 @@ import java.util.TimerTask;
 
 public class AirBand extends Activity implements SensorEventListener{
 
+    // How hard we have to strum in the downward direction to register a sound.
     private final float STRUMTHRESH = 10;
-    private SensorManager senSensorManager;
-    private Sensor senAccelerometer;
+    // On a guitar instrument, prevents us from strumming multiple times.
     private boolean canStrum;
+    // On a wind instrument, calculates if we are blowing last turn.
+    private double lastAmplitude;
+    // Instrument ID. Should have enum'd but too late for that
     private byte instrument = -1;
     // 1 for Piano
     // 2 for Guitar
@@ -40,6 +42,10 @@ public class AirBand extends Activity implements SensorEventListener{
     // 5 for Sax
     // 6 for Tpt
     // 7 for Flute
+    // The last registered accelromteres spots, needed for the saxophone.
+    private float nx,ny,nz;
+
+    // Flips from button view to next view
     ViewFlipper vf;
 
     @Override
@@ -53,8 +59,8 @@ public class AirBand extends Activity implements SensorEventListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_air_band);
-        senSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        SensorManager senSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        Sensor senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         senSensorManager.registerListener(this, senAccelerometer, SensorManager.SENSOR_DELAY_FASTEST);
         vf = (ViewFlipper) findViewById( R.id.viewFlipper );
         canStrum = true;
@@ -93,7 +99,7 @@ public class AirBand extends Activity implements SensorEventListener{
         ((Button)findViewById(R.id.piano)).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if(fetchPortAndIP()) {
-                    ((TextView)findViewById(R.id.instrumentv)).setText("Piano\nTouch anywhere on the screen.");
+                    ((TextView)findViewById(R.id.instrumentv)).setText("Piano\nTouch anywhere on the screen to play a chord.");
                     instrument = 1;
                     vf.showNext();
                 }
@@ -103,7 +109,7 @@ public class AirBand extends Activity implements SensorEventListener{
         ((Button)findViewById(R.id.synth)).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if(fetchPortAndIP()) {
-                    ((TextView)findViewById(R.id.instrumentv)).setText("Synthesizer\nTouch anywhere on the screen.");
+                    ((TextView)findViewById(R.id.instrumentv)).setText("Synthesizer\nTouch anywhere on the screen to get a note. The higher on the screen you touch, the higher the note.");
                     instrument = 4;
                     vf.showNext();
                 }
@@ -113,19 +119,17 @@ public class AirBand extends Activity implements SensorEventListener{
             public void onClick(View v) {
                 if(fetchPortAndIP()) {
                     instrument = 6;
-                    ((TextView)findViewById(R.id.instrumentv)).setText("Trumpet\nBlow into your microphone.");
+                    ((TextView)findViewById(R.id.instrumentv)).setText("Violin\nHold your device screen-side-down as if it were a bow");
                     vf.showNext();
-                    addWindsListener();
                 }
             }
         });
         ((Button)findViewById(R.id.flute)).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if(fetchPortAndIP()) {
-                    ((TextView)findViewById(R.id.instrumentv)).setText("Flute\nBlow into your microphone.");
+                    ((TextView)findViewById(R.id.instrumentv)).setText("Flute\nHold your phone like a flute and blow into your microphone. Tilt up and down for different pitches.");
                     instrument = 7;
                     vf.showNext();
-                    addWindsListener();
                 }
             }
         });
@@ -137,8 +141,18 @@ public class AirBand extends Activity implements SensorEventListener{
             public boolean onTouch(View v, MotionEvent event)
             {
                 if(event.getAction() == event.ACTION_DOWN && (instrument == 1 || instrument == 4)) {
-                    new SendStrumGram().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (AirBand.this));
-                    return true;
+                    if(instrument == 1)
+                        new SendStrumGram().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, SendStrumGram.PIANO_PLAY);
+                    else {
+                        DisplayMetrics dm = new DisplayMetrics();
+                        getWindowManager().getDefaultDisplay().getMetrics(dm);
+                        int h = dm.heightPixels; // etc...
+                        int y = (int) event.getY();
+                        double pos = ((double) y / h);
+                        byte note = (byte) (1 + SendStrumGram.SYNTH_HIGH - (((SendStrumGram.SYNTH_HIGH + 1) - SendStrumGram.SYNTH_LOW) * (pos)));
+                        Log.v("NeutalDe", "Played a" + note);
+                        new SendStrumGram().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, note);
+                    }
                 }
                 return false;
             }
@@ -187,20 +201,32 @@ public class AirBand extends Activity implements SensorEventListener{
         Sensor mySensor = sensorEvent.sensor;
 
         if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            float nx = sensorEvent.values[0];
-            float ny = sensorEvent.values[1];
-            float nz = sensorEvent.values[2];
+            nx = sensorEvent.values[0];
+            ny = sensorEvent.values[1];
+            nz = sensorEvent.values[2];
 
-            // Don't strum unless we return to normal
-            if(nx + ny <= 11f) {
-                canStrum = true;
-            }
-
-            //gtr/bass
-            if(canStrum && (nx + ny > (11f  + STRUMTHRESH) && (instrument == 2 || instrument == 3)))
+            //viol
+            if(instrument == 6)
             {
-                canStrum = false;
-                new SendStrumGram().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (this));
+                Log.v(nx + " " + ny + " " + nz)
+            }
+            else {
+                // Don't strum unless we return to normal
+                if (nx + ny <= 11f) {
+                    canStrum = true;
+                }
+
+                //gtr/bass
+                if (canStrum && (nx + ny > (11f + STRUMTHRESH) && (instrument == 2 || instrument == 3))) {
+                    canStrum = false;
+                    byte msg;
+                    if (instrument == 2)
+                        msg = SendStrumGram.GUITAR_STRUM;
+                    else
+                        msg = SendStrumGram.BASS_STRUM;
+                    // gtr = 2, bass = 3
+                    new SendStrumGram().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new Byte(msg));
+                }
             }
         }
     }
@@ -218,20 +244,29 @@ public class AirBand extends Activity implements SensorEventListener{
               SoundMeter m = new SoundMeter();
                 m.start();
                 m.stop();
-                Log.v("Neutralde", "T" + m.getAmplitude());
-                if(m.getAmplitude() > 30000) {
-                    new SendStrumGram().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (AirBand.this));
+                double amp =  m.getAmplitude();
+                Log.v("Neutralde", "T" + amp);
+
+                if(lastAmplitude < 30000 && amp >= 30000) {
+                    Log.v("Neutralde", "SEND!");
+                    Log.v("Neutralde",nx + " " + ny + " " + nz);
+                    //is todo
+                    byte msg = 0;
+                    msg = (byte)(SendStrumGram.SAX_LOW + ((SendStrumGram.SAX_HIGH - SendStrumGram.SAX_LOW)*((ny + 9.0) / 18.0)));
+                    new SendStrumGram().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, msg);
                 }
+                if(lastAmplitude > 30000 && amp < 30000)
+                {
+                    byte msg = 0;
+                    if(instrument == 5)
+                        msg = SendStrumGram.SAX_OFF;
+                    new SendStrumGram().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, msg);
+                }
+                lastAmplitude = amp;
             }
         }
 
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(new RecorderTask(), 0, 10);
     }
-
-    public byte getID()
-    {
-        return instrument;
-    }
-
 }

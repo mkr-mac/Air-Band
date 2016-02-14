@@ -15,13 +15,24 @@ public class AirBand {
 	// This is returned if there was no note.
 	public static final byte NO_NOTE = -2;
 	
-	public static final byte BASS_BYTE = 0;
-	public static final byte GUITAR_BYTE = 1;
-	public static final byte SAX_BYTE = 2;
-	public static final byte PIANO_BYTE = 3;
-	public static final byte SYNTH_BYTE = 4;
-	public static final byte BRASS_BYTE = 5;
-	public static final byte FLUTE_BYTE = 6;
+    public static final byte PIANO_PLAY = 10;
+    public static final byte GUITAR_STRUM = 20;
+    public static final byte BASS_STRUM = 30;
+    // a range.
+    public static final byte SYNTH_LOW = 40;
+    public static final byte SYNTH_HIGH= 47;
+
+    public static final byte SAX_LOW = 50;
+    public static final byte SAX_HIGH = 54;
+    public static final byte SAX_OFF = 55;
+
+    public static final byte TRUMPET_LOW = 60;
+    public static final byte TRUMPET_HIGH = 61;
+    public static final byte TRUMPET_OFF = 63;
+
+    public static final byte FLUTE_LOW = 70;
+    public static final byte FLUTE_HIGH = 74;
+    public static final byte FLUTE_OFF = 75;
 	
 	public static int pianoInversionCounter = 0;
 	public static boolean pianoInversionUp = true;
@@ -55,12 +66,12 @@ public class AirBand {
 				System.out.println("Socket Crashed");
 				return;
 			}
-			if(in == BASS_BYTE)
+			if(in == BASS_STRUM)
 			{
 				mid.noteQueue(MidiRoutines.Instrument.BASS, 36 + c.getBass()); 
 			}
 			
-			if(in == GUITAR_BYTE)
+			if(in == GUITAR_STRUM)
 			{
 				for(Integer interval : c.getFigure())
 				{
@@ -68,13 +79,21 @@ public class AirBand {
 				}
 			}
 			
-			if(in == SAX_BYTE)
+			if(in >= SYNTH_LOW && in <= SYNTH_HIGH)
 			{
-				mid.noteQueue(MidiRoutines.Instrument.LEAD, 60 + c.getBass() + c.getFigure().get((int)(Math.random()*c.getFigure().size()))); 
+				//get the steps above the lowest note.
+				int position = in - SYNTH_LOW;
+				//now, find out where the median is, which is randomized.
+				int median = (int)(Math.random() * (c.getFigure().size() - 1));
+				//To mix it up, I say position root = median.
+				int note = median + position;
+				
+				//add 12 for each octave, and modulus.
+				mid.noteQueue(MidiRoutines.Instrument.SYNTH, 48 + c.getBass() + 12*(note/c.getFigure().size()) + c.getFigure().get(note % c.getFigure().size())); 
 			}
 			
 			//Invert upwards twice.
-			if(in == PIANO_BYTE)
+			if(in == PIANO_PLAY)
 			{
 				int note = 0;
 				
@@ -101,20 +120,27 @@ public class AirBand {
 						pianoInversionUp = true;
 				}
 			}
-			if(in == SYNTH_BYTE)
+			
+
+			if(in >= SAX_LOW && in <= SAX_HIGH)
 			{
-				mid.noteQueue(MidiRoutines.Instrument.SYNTH, 60 + c.getBass() + c.getFigure().get((int)(Math.random()*c.getFigure().size()))); 
-			}
-			if(in == BRASS_BYTE)
-			{
+				int note = in - SAX_LOW;
 				//Mic-based
-				mid.noteQueue(MidiRoutines.Instrument.TRUMPET, 60 + c.getBass() + c.getFigure().get((int)(Math.random()*3))); 
+				mid.noteQueue(MidiRoutines.Instrument.SAX,  48 + c.getBass() + (12)*(note /  c.getFigure().size()) + c.getFigure().get( note % c.getFigure().size())  ); 
 			}
-			if(in == FLUTE_BYTE)
+			if(in == SAX_OFF)
 			{
-				//Mic-based
-				mid.noteQueue(MidiRoutines.Instrument.FLUTE, 60 + c.getBass() + c.getFigure().get((int)(Math.random()*c.getFigure().size()))); 
+				//sloppy
+				for(int i = 40; i != 127;i++)
+				{
+					mid.stop(MidiRoutines.Instrument.SAX, i);
+				}
 			}
+		//	if(in == FLUTE_BYTE)
+	//		{
+	//			//Mic-based
+	//			mid.noteQueue(MidiRoutines.Instrument.FLUTE, 60 + c.getBass() + c.getFigure().get((int)(Math.random()*c.getFigure().size()))); 
+	//		}
 
 				mid.update();
 		}
