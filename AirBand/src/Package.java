@@ -16,6 +16,7 @@ import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
+import javax.swing.DefaultComboBoxModel;
 
 
 public class Package {
@@ -106,6 +107,7 @@ public class Package {
 		
 		String[] styles = { "Rock", "Synth", "Funk", "Metal", "Classical"};
 		JComboBox comboBox_1 = new JComboBox(styles);
+		comboBox_1.setModel(new DefaultComboBoxModel(new String[] {"Synth", "This", "Is", "Some", "Feature", "Creep"}));
 		comboBox_1.setFont(new Font("Tahoma", Font.BOLD, 25));
 		comboBox_1.setBounds(353, 578, 200, 50);
 		frame.getContentPane().add(comboBox_1);
@@ -142,12 +144,12 @@ public class Package {
 		btnReady.setBounds(329, 281, 213, 124);
 		frame.getContentPane().add(btnReady);
 		
-		JLabel lblNewJgoodiesLabel = DefaultComponentFactory.getInstance().createLabel("Piano");
+		JLabel lblNewJgoodiesLabel = DefaultComponentFactory.getInstance().createLabel("Synth");
 		lblNewJgoodiesLabel.setFont(new Font("Tahoma", Font.BOLD, 32));
 		lblNewJgoodiesLabel.setBounds(76, 277, 114, 39);
 		frame.getContentPane().add(lblNewJgoodiesLabel);
 		
-		JLabel lblNewJgoodiesLabel_1 = DefaultComponentFactory.getInstance().createLabel("Synth");
+		JLabel lblNewJgoodiesLabel_1 = DefaultComponentFactory.getInstance().createLabel("Sax");
 		lblNewJgoodiesLabel_1.setFont(new Font("Tahoma", Font.BOLD, 32));
 		lblNewJgoodiesLabel_1.setBounds(76, 414, 98, 39);
 		frame.getContentPane().add(lblNewJgoodiesLabel_1);
