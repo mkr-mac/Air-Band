@@ -22,7 +22,7 @@ public class MidiRoutines {
 	private int volume = 127; // between 0 and 127
 	
 	//song tempo
-	private double tempo = 100; 
+	private static double tempo = 100; 
 	private long oldTime = System.nanoTime();
 	private long newTime = System.nanoTime();
 	private long delta = 0;
@@ -187,5 +187,9 @@ public class MidiRoutines {
 			play(Instrument.PERCUSSION, 42);
 			break;
 		}
+	}
+
+	public static void setTempo(int a) {
+		tempo = a;
 	}
 }

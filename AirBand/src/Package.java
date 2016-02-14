@@ -10,7 +10,6 @@ import com.jgoodies.forms.factories.DefaultComponentFactory;
 import java.awt.Font;
 
 import javax.swing.JCheckBox;
-
 import javax.swing.JButton;
 
 import java.awt.Color;
@@ -116,7 +115,20 @@ public class Package {
 		JButton btnReady = new JButton("Ready!");
 		btnReady.setFont(new Font("Informal Roman", Font.BOLD, 50));
 		btnReady.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) { 
+			public void actionPerformed(ActionEvent e) {
+				try{
+					int a = Integer.parseInt(textField.getText());
+					if((a < 10)||(a > 400)){
+						textField.setText("");
+						textField.setBackground(Color.RED);
+					}else{
+						MidiRoutines.setTempo(a);
+					}
+				}
+				catch(Exception ei){
+					textField.setText("");
+					textField.setBackground(Color.RED);
+				}
 			}
 		});
 		btnReady.setBackground(new Color(124, 252, 0));
