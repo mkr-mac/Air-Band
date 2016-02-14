@@ -128,7 +128,7 @@ public class AirBand extends Activity implements SensorEventListener{
         ((Button)findViewById(R.id.flute)).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if(fetchPortAndIP()) {
-                    ((TextView)findViewById(R.id.instrumentv)).setText("Flute\nHold your phone like a flute and blow into your microphone. Tilt up and down for different pitches.");
+                    ((TextView)findViewById(R.id.instrumentv)).setText("Flute\nHold your phone like a flute and touch the screen to play. Tilt up and down for different pitches.");
                     instrument = 7;
                     vf.showNext();
                 }
@@ -142,7 +142,11 @@ public class AirBand extends Activity implements SensorEventListener{
             public boolean onTouch(View v, MotionEvent event)
             {
                 int a = event.getAction();
-                if(a == event.ACTION_DOWN && (instrument == 1 || instrument == 4 || instrument == 6)) {
+                if(a == event.ACTION_DOWN && (instrument == 1 || instrument == 4 || instrument == 6 || instrument == 7)) {
+                    if(instrument == 7) {
+                        byte note = (byte)(SendStrumGram.FLUTE_HIGH - (Math.random() * (SendStrumGram.FLUTE_HIGH - SendStrumGram.FLUTE_LOW)));
+                        new SendStrumGram().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, note);
+                    }
                     if(instrument == 6)
                         new SendStrumGram().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, SendStrumGram.VIOLIN_ON);
                     if(instrument == 1)
@@ -154,7 +158,6 @@ public class AirBand extends Activity implements SensorEventListener{
                         int y = (int) event.getY();
                         double pos = ((double) y / h);
                         byte note = (byte) (1 + SendStrumGram.SYNTH_HIGH - (((SendStrumGram.SYNTH_HIGH + 1) - SendStrumGram.SYNTH_LOW) * (pos)));
-                        Log.v("NeutalDe", "Played a" + note);
                         new SendStrumGram().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, note);
 
                     }
@@ -162,8 +165,11 @@ public class AirBand extends Activity implements SensorEventListener{
                 }
 
                 if(a == event.ACTION_UP && (instrument == 6)) {
-                   Log.v("NeutralDe","AY!");
-                    new SendStrumGram().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, SendStrumGram.VIOLIN_OFF);
+                new SendStrumGram().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, SendStrumGram.VIOLIN_OFF);
+                return true;
+            }
+                if(a == event.ACTION_UP && (instrument == 7)) {
+                    new SendStrumGram().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, SendStrumGram.FLUTE_OFF);
                     return true;
                 }
                 return false;

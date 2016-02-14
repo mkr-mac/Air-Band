@@ -146,6 +146,20 @@ public class AirBand {
 					mid.stop(MidiRoutines.Instrument.VIOLIN, i);
 				}
 			}
+			if(in >= FLUTE_LOW && in <= FLUTE_HIGH)
+			{
+				int note = in - FLUTE_LOW;
+				//Mic-based
+				mid.noteQueue(MidiRoutines.Instrument.FLUTE,  72 + c.getBass() + (12)*(note /  c.getFigure().size()) + c.getFigure().get( note % c.getFigure().size())  ); 
+			}
+			if(in == FLUTE_OFF)
+			{
+				//sloppy
+				for(int i = 40; i != 127;i++)
+				{
+					mid.stop(MidiRoutines.Instrument.FLUTE, i);
+				}
+			}
 
 				
 			mid.update();
