@@ -46,6 +46,7 @@ public class AirBand {
 	{
 		
 		AirBand air = new AirBand();
+		Package p = new Package();
 		cm = new ChordMap();
 		c = new Chord(0,new ArrayList<Integer>(Arrays.asList(0,3,7,12)));
 		
