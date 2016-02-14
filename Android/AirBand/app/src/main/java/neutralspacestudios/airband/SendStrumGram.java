@@ -67,15 +67,7 @@ public class SendStrumGram extends AsyncTask<AirBand,Void,Boolean> {
 
     @Override
     protected void onPostExecute(Boolean result) {
-        if(result)
-        {
-            strumCount++;
-            airband.counter.setText("Strum Count" + strumCount);
-        }
-        else
-        {
-            airband.counter.setText("ERROR!");
-        }
+
 
     }
 }
