@@ -24,27 +24,6 @@
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Play Bass (Requires Wristband)"
-                android:id="@+id/bassButton"
-                android:layout_weight="1" />
-
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Play Rhythm Guitar (Requires Wristband)"
-                android:id="@+id/gtrButton"
-                android:layout_weight="1" />
-
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Play Lead Guitar (Requires Wristband)"
-                android:id="@+id/leadButton"
-                android:layout_weight="1" />
-
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:text="Play Piano"
                 android:layout_weight="1"
                 android:id="@+id/piano" />
@@ -52,14 +31,35 @@
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Play 80&apos;s Synth"
+                android:text="Play Guitar"
+                android:id="@+id/gtrButton"
+                android:layout_weight="1" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Play Bass"
+                android:id="@+id/bassButton"
+                android:layout_weight="1" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Play Synthesizer"
                 android:layout_weight="1"
                 android:id="@+id/synth" />
 
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Play Trumpet"
+                android:text="Play Saxophone"
+                android:id="@+id/saxButton"
+                android:layout_weight="1" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Play Violin"
                 android:layout_weight="1"
                 android:id="@+id/trumpet" />
 
@@ -71,18 +71,20 @@
                 android:id="@+id/flute" />
 
             <EditText
-                android:layout_width="327dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/ip"
                 android:layout_weight="1"
-                android:text="ip" />
+                android:hint="IP"
+                android:singleLine="true" />
 
             <EditText
-                android:layout_width="338dp"
+                android:layout_width="374dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/port"
                 android:layout_weight="1"
-                android:text="port" />
+                android:hint="PORT"
+                android:singleLine="true" />
 
         </LinearLayout>
 
@@ -98,35 +100,9 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="Large Text"
-                android:id="@+id/textView"
-                android:layout_centerHorizontal="true" />
+                android:layout_centerHorizontal="true"
+                android:id="@+id/instrumentv" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Large Text"
-                android:id="@+id/textView2"
-                android:layout_below="@+id/textView"
-                android:layout_centerHorizontal="true" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Large Text"
-                android:id="@+id/textView3"
-                android:layout_below="@+id/textView2"
-                android:layout_centerHorizontal="true" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Large Text"
-                android:id="@+id/count"
-                android:layout_below="@+id/textView3"
-                android:layout_centerHorizontal="true" />
         </RelativeLayout>
     </ViewFlipper>
 

@@ -19,23 +19,45 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-public class SendStrumGram extends AsyncTask<AirBand,Void,Boolean> {
+// Sends a byte (as a datagram) to the server.
+public class SendStrumGram extends AsyncTask<Byte,Void,Void> {
 
-    private String cert;
-    public static int PORT = 45320;
-    public static String ip = "172.19.37.183";
-    private static int strumCount = 0;
-    private static AirBand airband;
+    //These will be assigned before we can even make a connection.
+    public static int PORT;
+    public static String ip;
+
+    // We only want to send one message, ignore if many.
     private static boolean sending = false;
+    // A bunch of socket stuff
     private static DatagramSocket socket;
     private static byte[] buf;
     private static InetAddress address;
     private static DatagramPacket packet;
 
+    //!!! The network protocol !!!
+    public static final byte PIANO_PLAY = 10;
+    public static final byte GUITAR_STRUM = 20;
+    public static final byte BASS_STRUM = 30;
+    // a range.
+    public static final byte SYNTH_LOW = 40;
+    public static final byte SYNTH_HIGH= 47;
+
+    public static final byte SAX_LOW = 50;
+    public static final byte SAX_HIGH = 54;
+    public static final byte SAX_OFF = 55;
+
+    public static final byte VIOLIN_ON = 60;
+    public static final byte VIOLIN_OFF = 61;
+
+    public static final byte FLUTE_LOW = 70;
+    public static final byte FLUTE_HIGH = 74;
+    public static final byte FLUTE_OFF = 75;
+
+
     @Override
-    protected Boolean doInBackground(AirBand... params) {
+    protected Void doInBackground(Byte... params) {
         if (sending)
-            return true;
+            return null;
         sending = true;
 
         // get a datagram socket
@@ -46,36 +68,22 @@ public class SendStrumGram extends AsyncTask<AirBand,Void,Boolean> {
                 buf[0] = 4;
                 buf[1] = 20;
                 address = InetAddress.getByName(ip);
-                airband = params[0];
                 packet = new DatagramPacket(buf, buf.length, address, PORT);
             } catch (Exception e) {
-                return false;
+                return null;
             }
         }
         try
         {
-            buf[2] = airband.getID();
+            Log.v("NeutralDe","Sending a " + params[0]);
+            buf[2] = params[0];
             socket.send(packet);
             sending = false;
         } catch (Exception e) {
             Log.v("Error!",e.getMessage());
             socket.close();
-            return false;
         }
-        return true;
+        return null;
     }
 
-    @Override
-    protected void onPostExecute(Boolean result) {
-        if(result)
-        {
-            strumCount++;
-            airband.counter.setText("Strum Count" + strumCount);
-        }
-        else
-        {
-            airband.counter.setText("ERROR!");
-        }
-
-    }
 }

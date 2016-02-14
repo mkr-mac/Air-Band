@@ -1,6 +1,4 @@
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,13 +15,23 @@ public class AirBand {
 	// This is returned if there was no note.
 	public static final byte NO_NOTE = -2;
 	
-	public static final byte BASS_BYTE = 0;
-	public static final byte GUITAR_BYTE = 1;
-	public static final byte LEAD_BYTE = 2;
-	public static final byte PIANO_BYTE = 3;
-	public static final byte SYNTH_BYTE = 4;
-	public static final byte BRASS_BYTE = 5;
-	public static final byte FLUTE_BYTE = 6;
+    public static final byte PIANO_PLAY = 10;
+    public static final byte GUITAR_STRUM = 20;
+    public static final byte BASS_STRUM = 30;
+    // a range.
+    public static final byte SYNTH_LOW = 40;
+    public static final byte SYNTH_HIGH= 47;
+
+    public static final byte SAX_LOW = 50;
+    public static final byte SAX_HIGH = 54;
+    public static final byte SAX_OFF = 55;
+
+    public static final byte VIOLIN_ON = 60;
+    public static final byte VIOLIN_OFF = 61;
+
+    public static final byte FLUTE_LOW = 70;
+    public static final byte FLUTE_HIGH = 74;
+    public static final byte FLUTE_OFF = 75;
 	
 	public static int pianoInversionCounter = 0;
 	public static boolean pianoInversionUp = true;
@@ -49,87 +57,43 @@ public class AirBand {
 		MidiRoutines mid = new MidiRoutines();
 		System.out.println("MIDI Initalized.");		
 		
-		ProcessBuilder pb = new ProcessBuilder("exec/cv.exe");
-		Process p;  
-		BufferedReader bri ;
-		try
-		{
-			p = pb.start();  
-		 bri = new BufferedReader(new InputStreamReader(p.getInputStream()));
-		} catch (Exception e)
-		{
-			e.printStackTrace();
-			System.out.println("Failed to start openCV, aborting");
-			return;
-		}
-		System.out.println("openCV started.");	
-		String line;
-		
-		int redY = 0;
-		//int greenY = 0;
-		int blueY = 0;
-		
-		int redYMax = 0;
-		//int greenYMax = 0;
-		int blueYMax = 0;
-		
-		int redYMin = 1000;
-		//int greenYMin = 1000;
-		int blueYMin = 1000;
-		
 		while(true)
-		{
-			try{
-				line = bri.readLine();
-			} catch (Exception e)
-			{
-				System.out.println("Invalid openCV output");
-				return;
-			}
-			
-			if(line != null && !line.equals("noise"))
-			{
-				//System.out.println("OpenCv says:" + line);
-				String[] parts = line.split(" ");
-				//greenY = Integer.parseInt(parts[0]);
-				blueY = Integer.parseInt(parts[3]);
-				//System.out.println(blueY);
-				//redY= Integer.parseInt(parts[5]);
-			}
-			
-			
-		
+		{		
 			byte in = air.recieveStrums();
 			if(in == ERROR_BYTE)
 			{
 				System.out.println("Socket Crashed");
 				return;
 			}
-			if(in == BASS_BYTE)
+			if(in == BASS_STRUM)
 			{
-				if(blueY != 0)
-				{
-					int note =  (int)(((double)(blueY) / 500.0) * 8.0);
-					//System.out.println(" NOTE: " + note);
-					mid.noteQueue(MidiRoutines.Instrument.BASS, 36 + c.getBass() + c.getFigure().get(note % c.getFigure().size()) + ((note/c.getFigure().size())*12)); 
-				}
+				mid.noteQueue(MidiRoutines.Instrument.BASS, 36 + c.getBass()); 
 			}
-			if(in == GUITAR_BYTE)
+			
+			if(in == GUITAR_STRUM)
 			{
 				for(Integer interval : c.getFigure())
 				{
-					mid.noteQueue(MidiRoutines.Instrument.RHYTHM, 48 + c.getBass()+ interval); 
+					mid.noteQueue(MidiRoutines.Instrument.RHYTHM, 48 + c.getBass() + interval); 
 				}
 			}
-			if(in == LEAD_BYTE)
+			
+			if(in >= SYNTH_LOW && in <= SYNTH_HIGH)
 			{
-				mid.noteQueue(MidiRoutines.Instrument.LEAD, 60 + c.getBass() + c.getFigure().get((int)(Math.random()*c.getFigure().size()))); 
+				//get the steps above the lowest note.
+				int position = in - SYNTH_LOW;
+				//now, find out where the median is, which is randomized.
+				int median = (int)(Math.random() * (c.getFigure().size() - 1));
+				//To mix it up, I say position root = median.
+				int note = median + position;
+				
+				//add 12 for each octave, and modulus.
+				mid.noteQueue(MidiRoutines.Instrument.SYNTH, 48 + c.getBass() + 12*(note/c.getFigure().size()) + c.getFigure().get(note % c.getFigure().size())); 
 			}
 			
 			//Invert upwards twice.
-			if(in == PIANO_BYTE)
+			if(in == PIANO_PLAY)
 			{
-				//Piano inversion works way up. 2->2->hold
 				int note = 0;
 				
 				for(Integer interval : c.getFigure())
@@ -155,22 +119,50 @@ public class AirBand {
 						pianoInversionUp = true;
 				}
 			}
-			if(in == SYNTH_BYTE)
+			
+
+			if(in >= SAX_LOW && in <= SAX_HIGH)
 			{
-				mid.noteQueue(MidiRoutines.Instrument.SYNTH, 60 + c.getBass() + c.getFigure().get((int)(Math.random()*c.getFigure().size()))); 
-			}
-			if(in == BRASS_BYTE)
-			{
+				int note = in - SAX_LOW;
 				//Mic-based
-				mid.noteQueue(MidiRoutines.Instrument.TRUMPET, 60 + c.getBass() + c.getFigure().get((int)(Math.random()*3))); 
+				mid.noteQueue(MidiRoutines.Instrument.SAX,  48 + c.getBass() + (12)*(note /  c.getFigure().size()) + c.getFigure().get( note % c.getFigure().size())  ); 
 			}
-			if(in == FLUTE_BYTE)
+			if(in == SAX_OFF)
 			{
+				//sloppy
+				for(int i = 40; i != 127;i++)
+				{
+					mid.stop(MidiRoutines.Instrument.SAX, i);
+				}
+			}
+			if(in == VIOLIN_ON)
+			{
+				mid.noteQueue(MidiRoutines.Instrument.VIOLIN, 60 + c.getBass() + c.getFigure().get(2)); 
+			}
+			if(in == VIOLIN_OFF)
+			{
+				for(int i = 40; i != 127;i++)
+				{
+					mid.stop(MidiRoutines.Instrument.VIOLIN, i);
+				}
+			}
+			if(in >= FLUTE_LOW && in <= FLUTE_HIGH)
+			{
+				int note = in - FLUTE_LOW;
 				//Mic-based
-				mid.noteQueue(MidiRoutines.Instrument.FLUTE, 60 + c.getBass() + c.getFigure().get((int)(Math.random()*c.getFigure().size()))); 
+				mid.noteQueue(MidiRoutines.Instrument.FLUTE,  72 + c.getBass() + (12)*(note /  c.getFigure().size()) + c.getFigure().get( note % c.getFigure().size())  ); 
+			}
+			if(in == FLUTE_OFF)
+			{
+				//sloppy
+				for(int i = 40; i != 127;i++)
+				{
+					mid.stop(MidiRoutines.Instrument.FLUTE, i);
+				}
 			}
 
-				mid.update();
+				
+			mid.update();
 		}
 	}
 	
@@ -200,8 +192,6 @@ public class AirBand {
 			// Handshake to prevent random traffic.
 			if(buf[0] == 4 && buf[1] == 20)
 			{
-
-				System.out.println("test");
 				return buf[2];
 			}
 			System.out.println("Bad Traffic!");
@@ -224,5 +214,4 @@ public class AirBand {
 		}	
 		return ERROR_BYTE;
     }
- 
 }
