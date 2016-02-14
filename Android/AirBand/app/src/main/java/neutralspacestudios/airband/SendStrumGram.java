@@ -46,9 +46,8 @@ public class SendStrumGram extends AsyncTask<Byte,Void,Void> {
     public static final byte SAX_HIGH = 54;
     public static final byte SAX_OFF = 55;
 
-    public static final byte TRUMPET_LOW = 60;
-    public static final byte TRUMPET_HIGH = 61;
-    public static final byte TRUMPET_OFF = 63;
+    public static final byte VIOLIN_ON = 60;
+    public static final byte VIOLIN_OFF = 61;
 
     public static final byte FLUTE_LOW = 70;
     public static final byte FLUTE_HIGH = 74;

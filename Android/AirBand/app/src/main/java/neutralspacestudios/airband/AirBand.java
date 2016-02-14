@@ -1,6 +1,7 @@
 package neutralspacestudios.airband;
 
 import android.app.Activity;
+import android.app.Notification;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -119,7 +120,7 @@ public class AirBand extends Activity implements SensorEventListener{
             public void onClick(View v) {
                 if(fetchPortAndIP()) {
                     instrument = 6;
-                    ((TextView)findViewById(R.id.instrumentv)).setText("Violin\nHold your device screen-side-down as if it were a bow");
+                    ((TextView)findViewById(R.id.instrumentv)).setText("Violin\nHold your device screen-side down as if it were a bow. Touch your screen to play the violin while moving your phone gently.");
                     vf.showNext();
                 }
             }
@@ -140,7 +141,10 @@ public class AirBand extends Activity implements SensorEventListener{
             @Override
             public boolean onTouch(View v, MotionEvent event)
             {
-                if(event.getAction() == event.ACTION_DOWN && (instrument == 1 || instrument == 4)) {
+                int a = event.getAction();
+                if(a == event.ACTION_DOWN && (instrument == 1 || instrument == 4 || instrument == 6)) {
+                    if(instrument == 6)
+                        new SendStrumGram().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, SendStrumGram.VIOLIN_ON);
                     if(instrument == 1)
                         new SendStrumGram().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, SendStrumGram.PIANO_PLAY);
                     else {
@@ -152,7 +156,14 @@ public class AirBand extends Activity implements SensorEventListener{
                         byte note = (byte) (1 + SendStrumGram.SYNTH_HIGH - (((SendStrumGram.SYNTH_HIGH + 1) - SendStrumGram.SYNTH_LOW) * (pos)));
                         Log.v("NeutalDe", "Played a" + note);
                         new SendStrumGram().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, note);
+
                     }
+                    return true;
+                }
+
+                if(a == event.ACTION_UP && (instrument == 6)) {
+                   Log.v("NeutralDe","AY!");
+                    new SendStrumGram().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, SendStrumGram.VIOLIN_OFF);
                 }
                 return false;
             }
@@ -205,12 +216,7 @@ public class AirBand extends Activity implements SensorEventListener{
             ny = sensorEvent.values[1];
             nz = sensorEvent.values[2];
 
-            //viol
-            if(instrument == 6)
-            {
-                Log.v(nx + " " + ny + " " + nz)
-            }
-            else {
+
                 // Don't strum unless we return to normal
                 if (nx + ny <= 11f) {
                     canStrum = true;
@@ -227,7 +233,7 @@ public class AirBand extends Activity implements SensorEventListener{
                     // gtr = 2, bass = 3
                     new SendStrumGram().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new Byte(msg));
                 }
-            }
+
         }
     }
 

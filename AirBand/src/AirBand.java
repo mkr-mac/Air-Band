@@ -26,9 +26,8 @@ public class AirBand {
     public static final byte SAX_HIGH = 54;
     public static final byte SAX_OFF = 55;
 
-    public static final byte TRUMPET_LOW = 60;
-    public static final byte TRUMPET_HIGH = 61;
-    public static final byte TRUMPET_OFF = 63;
+    public static final byte VIOLIN_ON = 60;
+    public static final byte VIOLIN_OFF = 61;
 
     public static final byte FLUTE_LOW = 70;
     public static final byte FLUTE_HIGH = 74;
@@ -136,13 +135,20 @@ public class AirBand {
 					mid.stop(MidiRoutines.Instrument.SAX, i);
 				}
 			}
-		//	if(in == FLUTE_BYTE)
-	//		{
-	//			//Mic-based
-	//			mid.noteQueue(MidiRoutines.Instrument.FLUTE, 60 + c.getBass() + c.getFigure().get((int)(Math.random()*c.getFigure().size()))); 
-	//		}
+			if(in == VIOLIN_ON)
+			{
+				mid.noteQueue(MidiRoutines.Instrument.VIOLIN, 60 + c.getBass() + c.getFigure().get(2)); 
+			}
+			if(in == VIOLIN_OFF)
+			{
+				for(int i = 40; i != 127;i++)
+				{
+					mid.stop(MidiRoutines.Instrument.VIOLIN, i);
+				}
+			}
 
-				mid.update();
+				
+			mid.update();
 		}
 	}
 	

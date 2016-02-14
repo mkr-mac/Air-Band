@@ -7,14 +7,14 @@ import javax.sound.midi.MidiDevice;
 
 public class MidiRoutines {
 	
-	enum Instrument { BASS, RHYTHM, SAX, PERCUSSION, PIANO, SYNTH, TRUMPET, FLUTE};
+	enum Instrument { BASS, RHYTHM, SAX, PERCUSSION, PIANO, SYNTH, VIOLIN, FLUTE};
 	
 	private int bassChannel = 1;
 	private int rhythmChannel = 2;
 	private int saxChannel = 3;
 	private int pianoChannel = 4;
 	private int synthChannel = 5;
-	private int trumpetChannel = 6;
+	private int violinChannel = 6;
 	private int fluteChannel = 7;
 	
 	private int percussionChannel = 9;
@@ -95,8 +95,8 @@ public class MidiRoutines {
 		case SYNTH:
 			channel = synthChannel;
 			break;
-		case TRUMPET:
-			channel = trumpetChannel;
+		case VIOLIN:
+			channel = violinChannel;
 			break;
 		case FLUTE:
 			channel = fluteChannel;
@@ -135,8 +135,8 @@ public class MidiRoutines {
 		case SYNTH:
 			channel = synthChannel;
 			break;
-		case TRUMPET:
-			channel = trumpetChannel;
+		case VIOLIN:
+			channel = violinChannel;
 			break;
 		case FLUTE:
 			channel = fluteChannel;
