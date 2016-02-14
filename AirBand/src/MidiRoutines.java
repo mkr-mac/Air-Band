@@ -21,14 +21,12 @@ public class MidiRoutines {
 
 	private int volume = 127; // between 0 and 127
 	
-	//song tempo
-	private static double tempo = 100; 
 	private long oldTime = System.nanoTime();
 	private long newTime = System.nanoTime();
 	private long delta = 0;
 	
-	//for nicer calculations
-	private double tempoMod = tempo/120000000;
+	private static double tempo;
+	private static double tempoMod;
 	
 	private int beats = 0;
 	private double oldBeats = 3;
@@ -228,8 +226,11 @@ public class MidiRoutines {
 			break;
 		}
 	}
+	public static void setTempo(int a){
 
-	public static void setTempo(int a) {
-		tempo = a;
+		//song tempo
+		tempo = (double)a;
+		//for nicer calculations
+		tempoMod = tempo/120000000;
 	}
 }

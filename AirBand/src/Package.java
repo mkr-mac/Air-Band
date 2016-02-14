@@ -25,6 +25,7 @@ public class Package {
 	private JTextField textField;
 	
 	boolean isAlive = true;
+	int a;
 	
 	JCheckBox chckbxNewCheckBox;
 	JCheckBox checkBox;
@@ -119,12 +120,13 @@ public class Package {
 		btnReady.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try{
-					int a = Integer.parseInt(textField.getText());
-					if((a <= 90)||(a >= 150)){
+					a = Integer.parseInt(textField.getText());
+					if((a < 90)||(a > 150)){
 						textField.setText("");
 						textField.setBackground(Color.RED);
 					}else{
 						MidiRoutines.setTempo(a);
+						isAlive = false;
 						frame.setVisible(false);
 						frame.dispose();
 					}

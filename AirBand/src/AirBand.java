@@ -64,11 +64,11 @@ public class AirBand {
 		{		
 			byte in = air.recieveStrums();
 			
-			if(p.isAlive)
+			//if(p.isAlive)
 			{
-				p.soundCheckUpdate(noteToInst(in), true);
+				//p.soundCheckUpdate(noteToInst(in), true);
 			}
-			else
+			//else
 			{
 			if(in == ERROR_BYTE)
 			{
