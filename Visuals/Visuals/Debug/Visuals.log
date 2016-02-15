@@ -1,0 +1,8 @@
+﻿Visual.obj : error LNK2019: unresolved external symbol _glfwInit referenced in function _main
+Visual.obj : error LNK2019: unresolved external symbol _glfwTerminate referenced in function _main
+Visual.obj : error LNK2019: unresolved external symbol _glfwGetPrimaryMonitor referenced in function _main
+Visual.obj : error LNK2019: unresolved external symbol _glfwWindowHint referenced in function _main
+Visual.obj : error LNK2019: unresolved external symbol _glfwCreateWindow referenced in function _main
+D:\Programming\glfw-3.1.2.bin.WIN64\lib-vc2015\glfw3.lib : warning LNK4272: library machine type 'x64' conflicts with target machine type 'X86'
+D:\Programming\glfw-3.1.2.bin.WIN64\lib-vc2015\glfw3dll.lib : warning LNK4272: library machine type 'x64' conflicts with target machine type 'X86'
+D:\Programming\github\ab\Visuals\Debug\Visuals.exe : fatal error LNK1120: 5 unresolved externals
